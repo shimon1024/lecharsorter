@@ -2,11 +2,11 @@ import './Setup.css'
 
 function GameGroup({name, chars}) {
   return (
-    <ul>
+    <ul className="gamegroup-tree">
       <li>
         <details>
           <summary><label><input type="checkbox" />{name}</label></summary>
-          <ul>
+          <ul className="gamegroup-tree">
             {chars.map((c, i) => <li key={i}><label><input type="checkbox" />{c}</label></li>)}
           </ul>
         </details>
