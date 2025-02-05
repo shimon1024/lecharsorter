@@ -9,6 +9,7 @@ export default function Compare() {
       <button>↶</button>
       <button>↷</button>
       <p>(n組目、n%完了、残り最大n組)</p>
+      <button>ソートをやめる</button>
 
       <div>開発: <a href="https://postfixnotation.org/">志文</a></div>
     </>
