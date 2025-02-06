@@ -20,7 +20,7 @@ export default function Setup() {
     <>
       <h1>連縁キャラソート</h1>
 
-      <button style={{textalign: 'center'}}>はじめる</button>
+      <button className="setup-start">はじめる</button>
 
       <p>
         <label><input type="checkbox" />すべて</label>
