@@ -23,20 +23,18 @@ export default function Setup() {
     <>
       <h1>連縁キャラソート</h1>
 
-      <p>
-        <button className="setup-start">はじめる</button>
-      </p>
+      <button className="setup-start">はじめる</button>
 
-      <p>
+      <div>
         <label><input type="checkbox" />すべて</label>
         <GameGroup name={"作品1"} chars={["キャラ1", "キャラ2", "キャラ3"]} />
         <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "キャラ6"]} />
         <GameGroup name={"作品3"} chars={["キャラ7", "キャラ8", "キャラ9"]} />
         <GameGroup name={"作品4"} chars={["キャラ10", "キャラ11", "キャラ12"]} />
         <GameGroup name={"作品5"} chars={["キャラ13", "キャラ14", "キャラ15"]} />
-      </p>
+      </div>
 
-      <p>
+      <span>
         ランキング人数
         <select className="setup-numpeople">
           <option>1位のみ</option>
@@ -46,9 +44,9 @@ export default function Setup() {
           <option>20位まで</option>
           <option>すべて</option>
         </select>
-      </p>
+      </span>
 
-      <p>
+      <span>
         どっちが
         <input
           type="text"
@@ -59,21 +57,17 @@ export default function Setup() {
           value={sorterTitle}
         />
         ？
-      </p>
+      </span>
 
-      <p>
-        <details>
-          <summary>使い方</summary>
-          こんなかんじです
-        </details>
-      </p>
+      <details>
+        <summary>使い方</summary>
+        こんなかんじです
+      </details>
 
-      <p>
-        <details>
-          <summary>更新履歴</summary>
-          こんなかんじでした
-        </details>
-      </p>
+      <details>
+        <summary>更新履歴</summary>
+        こんなかんじでした
+      </details>
 
       <footer>開発: <a href="https://postfixnotation.org/">志文</a></footer>
     </>
