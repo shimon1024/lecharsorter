@@ -15,8 +15,11 @@
 }
 
 .setup-start {
-  margin: 0.25em 1em;
+  margin: 0.25em 0;
   text-align: center;
+  place-self: center center;
+  padding-left: 7em;
+  padding-right: 7em;
 }
 
 .setup-chars-container {
