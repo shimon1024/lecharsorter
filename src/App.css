@@ -6,7 +6,3 @@
   display: flex;
   flex-flow: column;
 }
-
-.card {
-  padding: 2em;
-}

@@ -5,16 +5,9 @@ import Setup from './Setup.jsx'
 //import Result from './Result.jsx'
 
 export default function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <Setup />
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
     </>
   )
 }
