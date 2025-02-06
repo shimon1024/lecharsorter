@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Setup.css'
 
 function GameGroup({name, chars}) {
@@ -16,6 +17,8 @@ function GameGroup({name, chars}) {
 }
 
 export default function Setup() {
+  const [sorterTitle, setSorterTitle] = useState("すき");
+
   return (
     <>
       <h1>連縁キャラソート</h1>
@@ -43,7 +46,18 @@ export default function Setup() {
         </select>
       </p>
 
-      <p>どっちが<input type="text" size="25" className="setup-sorter-title" maxLength="128" value="すき" />？</p>
+      <p>
+        どっちが
+        <input
+          type="text"
+          size="25"
+          className="setup-sorter-title"
+          maxLength="128"
+          onChange={e => setSorterTitle(e.target.value)}
+          value={sorterTitle}
+        />
+        ？
+      </p>
 
       <p>
         <details>
