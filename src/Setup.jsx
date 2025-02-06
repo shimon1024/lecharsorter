@@ -61,6 +61,8 @@ export default function Setup() {
         ？
       </span>
 
+      <hr className="setup-hr-opts-desc" />
+
       <details className="setup-usage">
         <summary>使い方</summary>
         こんなかんじです
