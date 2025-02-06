@@ -26,11 +26,11 @@ h1 {
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: limegreen;
   text-decoration: inherit;
 }
 a:hover {
-  color: #747bff;
+  color: color-mix(in srgb, limegreen 90%, white);
 }
 
 button {
@@ -43,6 +43,12 @@ button {
   font-weight: 500;
   background-color: whitesmoke;
   cursor: pointer;
+}
+button:hover {
+  background-color: color-mix(in srgb, whitesmoke 95%, black);
+}
+button:active {
+  background-color: color-mix(in srgb, whitesmoke 90%, black);
 }
 
 input[type="checkbox"] {
