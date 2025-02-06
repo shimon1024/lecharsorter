@@ -6,7 +6,7 @@ function GameGroup({name, chars}) {
       <li>
         <details>
           <summary><label><input type="checkbox" />{name}</label></summary>
-          <ul className="gamegroup-tree">
+          <ul>
             {chars.map((c, i) => <li key={i}><label><input type="checkbox" />{c}</label></li>)}
           </ul>
         </details>
