@@ -23,8 +23,6 @@ export default function Setup() {
     <>
       <h1 className="setup-title">連縁キャラソート</h1>
 
-      <button className="setup-start">はじめる</button>
-
       <div className="setup-chars-container">
         <label><input type="checkbox" />すべて</label>
         <div className="setup-chars-gamegroup-container">
@@ -60,6 +58,8 @@ export default function Setup() {
         />
         ？
       </span>
+
+      <button className="setup-start">はじめる</button>
 
       <hr className="setup-hr-opts-desc" />
 

@@ -14,14 +14,6 @@
   margin: 0.375em auto;
 }
 
-.setup-start {
-  margin: 0.25em 0;
-  text-align: center;
-  place-self: center center;
-  padding-left: 7em;
-  padding-right: 7em;
-}
-
 .setup-chars-container {
   grid-column: 1 / -1;
   margin: 1em auto;
@@ -49,6 +41,13 @@
 
 .setup-sorter-title {
   margin-left: 0.25em;
+}
+
+.setup-start {
+  margin: 1em 0 0.25em;
+  place-self: center center;
+  padding-left: 5em;
+  padding-right: 5em;
 }
 
 .setup-hr-opts-desc {
