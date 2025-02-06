@@ -36,7 +36,7 @@ export default function Setup() {
 
       <span>
         ランキング人数
-        <select className="setup-numpeople">
+        <select className="setup-numchars">
           <option>1位のみ</option>
           <option>3位まで</option>
           <option>5位まで</option>
