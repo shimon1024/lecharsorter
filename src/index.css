@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color: #213547;
-  background-color: #ffffff;
+  background-color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -34,6 +34,7 @@ a:hover {
 }
 
 button {
+  /* reset */
   font-size: 1em;
   font-family: inherit;
 
@@ -59,6 +60,7 @@ input[type="checkbox"] {
 }
 
 input[type="text"] {
+  /* reset */
   font-family: inherit;
   font-weight: inherit;
   color: inherit;
@@ -71,6 +73,7 @@ input[type="text"] {
 }
 
 select {
+  /* reset */
   font-family: inherit;
   font-weight: inherit;
   color: inherit;
