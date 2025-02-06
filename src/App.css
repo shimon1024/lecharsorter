@@ -1,8 +1,12 @@
-#root {
-  max-width: 1280px;
+.root {
+  max-width: 1140px;
   margin: 0 auto;
   padding: 2rem;
 
-  display: flex;
-  flex-flow: column;
+  display: grid;
+  grid-template-columns: 1fr min(28rem, 95%) 1fr;
+}
+
+.root > * {
+  grid-column: 2;
 }

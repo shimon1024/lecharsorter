@@ -21,17 +21,19 @@ export default function Setup() {
 
   return (
     <>
-      <h1>連縁キャラソート</h1>
+      <h1 className="setup-title">連縁キャラソート</h1>
 
       <button className="setup-start">はじめる</button>
 
       <div className="setup-chars-container">
         <label><input type="checkbox" />すべて</label>
-        <GameGroup name={"作品1"} chars={["キャラ1", "キャラ2", "キャラ3"]} />
-        <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "キャラ6"]} />
-        <GameGroup name={"作品3"} chars={["キャラ7", "キャラ8", "キャラ9"]} />
-        <GameGroup name={"作品4"} chars={["キャラ10", "キャラ11", "キャラ12"]} />
-        <GameGroup name={"作品5"} chars={["キャラ13", "キャラ14", "キャラ15"]} />
+        <div className="setup-chars-gamegroup-container">
+          <GameGroup name={"作品1"} chars={["キャラ1", "キャラ2", "キャラ3"]} />
+          <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "キャラ6"]} />
+          <GameGroup name={"作品3"} chars={["キャラ7", "キャラ8", "キャラ9"]} />
+          <GameGroup name={"作品4"} chars={["キャラ10", "キャラ11", "キャラ12"]} />
+          <GameGroup name={"作品5"} chars={["キャラ13", "キャラ14", "キャラ15"]} />
+        </div>
       </div>
 
       <span>
