@@ -84,3 +84,7 @@ select {
   border-style: none;
   padding: 0.3em 0 0.3em 0.3em;
 }
+
+footer {
+  font-size: 0.75em;
+}
