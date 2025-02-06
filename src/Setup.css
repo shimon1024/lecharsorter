@@ -11,17 +11,17 @@
 }
 
 .setup-title {
-  text-align: center;
+  margin: 0.375em auto;
 }
 
 .setup-start {
-  margin: 0 1em;
+  margin: 0.25em 1em;
   text-align: center;
 }
 
 .setup-chars-container {
   grid-column: 1 / -1;
-  margin: 0 auto;
+  margin: 1em auto;
 }
 
 .setup-chars-gamegroup-container {
@@ -30,10 +30,31 @@
   flex-wrap: wrap;
 }
 
+.setup-numchars-container {
+  margin: 0.25em 0;
+}
+
 .setup-numchars {
   margin-left: 0.25em;
 }
 
+.setup-sorter-title-container {
+  margin: 0.25em 0;
+}
+
 .setup-sorter-title {
   margin-left: 0.25em;
+}
+
+.setup-usage {
+  margin: 0.25em 0;
+}
+
+.setup-changelog {
+  margin: 0.25em 0;
+}
+
+.setup-footer {
+  grid-column: 1 / -1;
+  margin: 0.25em 0;
 }

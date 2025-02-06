@@ -36,7 +36,7 @@ export default function Setup() {
         </div>
       </div>
 
-      <span>
+      <span className="setup-numchars-container">
         ランキング人数
         <select className="setup-numchars">
           <option>1位のみ</option>
@@ -48,7 +48,7 @@ export default function Setup() {
         </select>
       </span>
 
-      <span>
+      <span className="setup-sorter-title-container">
         どっちが
         <input
           type="text"
@@ -61,17 +61,17 @@ export default function Setup() {
         ？
       </span>
 
-      <details>
+      <details className="setup-usage">
         <summary>使い方</summary>
         こんなかんじです
       </details>
 
-      <details>
+      <details className="setup-changelog">
         <summary>更新履歴</summary>
         こんなかんじでした
       </details>
 
-      <footer>開発: <a href="https://postfixnotation.org/">志文</a></footer>
+      <footer className="setup-footer">開発: <a href="https://postfixnotation.org/">志文</a></footer>
     </>
   );
 }
