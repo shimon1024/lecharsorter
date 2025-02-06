@@ -23,7 +23,9 @@ export default function Setup() {
     <>
       <h1>連縁キャラソート</h1>
 
-      <button className="setup-start">はじめる</button>
+      <p>
+        <button className="setup-start">はじめる</button>
+      </p>
 
       <p>
         <label><input type="checkbox" />すべて</label>
