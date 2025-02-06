@@ -25,7 +25,7 @@ export default function Setup() {
 
       <button className="setup-start">はじめる</button>
 
-      <div>
+      <div className="setup-chars-container">
         <label><input type="checkbox" />すべて</label>
         <GameGroup name={"作品1"} chars={["キャラ1", "キャラ2", "キャラ3"]} />
         <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "キャラ6"]} />

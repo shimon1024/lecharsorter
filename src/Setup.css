@@ -7,6 +7,11 @@
   text-align: center;
 }
 
+.setup-chars-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .setup-numchars {
   margin-left: 0.25em;
 }
