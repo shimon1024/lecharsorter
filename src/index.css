@@ -3,7 +3,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color: #213547;
+  --xkcd-dark-blue-gray: #1f3b4d;
+
+  color: var(--xkcd-dark-blue-gray);
   background-color: white;
 
   font-synthesis: none;
