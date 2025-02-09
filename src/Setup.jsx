@@ -50,7 +50,6 @@ export default function Setup() {
         どっちが
         <input
           type="text"
-          size="25"
           className="setup-sorter-title"
           maxLength="128"
           onChange={e => setSorterTitle(e.target.value)}
