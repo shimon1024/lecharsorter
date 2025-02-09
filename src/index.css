@@ -94,10 +94,6 @@ footer {
   font-size: 0.75em;
 }
 
-.headpad {
-  flex-grow: 1;
-}
-
 .footer {
   flex-grow: 1;
   align-self: start;
