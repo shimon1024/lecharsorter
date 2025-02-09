@@ -7,7 +7,10 @@ import Setup from './Setup.jsx'
 export default function App() {
   return (
     <>
-      <Setup />
+      <div className="main">
+        <Setup />
+      </div>
+      <footer className="footer">開発: <a href="https://postfixnotation.org/">志文</a></footer>
     </>
   )
 }
