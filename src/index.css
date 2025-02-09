@@ -59,6 +59,9 @@ button:active {
 }
 
 input[type="checkbox"] {
+  /* reset */
+  font-size: 1rem;
+
   width: 1.25em;
   height: 1.25em;
   accent-color: green;

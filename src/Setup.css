@@ -3,11 +3,19 @@
   padding: 0;
 
   margin: 1em 0 0;
-  min-width: 12em;
+  width: 12.25em;
 }
 
 .gamegroup-tree li {
   list-style-type: none;
+}
+
+.gamegroup-char {
+  display: inline-flex;
+  place-items: start;
+}
+.gamegroup-char > input[type="checkbox"] {
+  flex-shrink: 0;
 }
 
 .setup-title {

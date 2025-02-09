@@ -8,7 +8,7 @@ function GameGroup({name, chars}) {
         <details>
           <summary><label><input type="checkbox" />{name}</label></summary>
           <ul>
-            {chars.map((c, i) => <li key={i}><label><input type="checkbox" />{c}</label></li>)}
+            {chars.map((c, i) => <li key={i}><label className="gamegroup-char"><input type="checkbox" />{c}</label></li>)}
           </ul>
         </details>
       </li>
@@ -27,8 +27,8 @@ export default function Setup() {
         <label><input type="checkbox" />すべて</label>
         <div className="setup-chars-gamegroup-container">
           <GameGroup name={"作品1"} chars={["キャラ1", "キャラ2", "キャラ3"]} />
-          <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "キャラ6"]} />
-          <GameGroup name={"作品3"} chars={["キャラ7", "キャラ8", "キャラ9"]} />
+          <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "あいうえおかきくけこ"]} />
+          <GameGroup name={"作品3"} chars={["キャラ7", "キャラ8", "龍龍龍龍龍龍龍龍"]} />
           <GameGroup name={"作品4"} chars={["キャラ10", "キャラ11", "キャラ12"]} />
           <GameGroup name={"作品5"} chars={["キャラ13", "キャラ14", "キャラ15"]} />
         </div>
