@@ -3,7 +3,6 @@
   padding: 0;
 
   margin: 1em 0 0;
-  width: 12.25em;
 }
 
 .gamegroup-tree li {
@@ -30,12 +29,14 @@
   padding: 0.5em 1em;
   background-color: whitesmoke;
   border-radius: 0.5em;
+
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .setup-chars-gamegroup-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.25em, 1fr));
 }
 
 .setup-numchars-container {

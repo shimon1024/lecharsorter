@@ -27,7 +27,7 @@ export default function Setup() {
         <label><input type="checkbox" />すべて</label>
         <div className="setup-chars-gamegroup-container">
           <GameGroup name={"作品1"} chars={["キャラ1", "キャラ2", "キャラ3"]} />
-          <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "あいうえおかきくけこ"]} />
+          <GameGroup name={"作品2"} chars={["キャラ4", "キャラ5", "あいうえおかきくけこさしすせそたちつてと"]} />
           <GameGroup name={"作品3"} chars={["キャラ7", "キャラ8", "龍龍龍龍龍龍龍龍"]} />
           <GameGroup name={"作品4"} chars={["キャラ10", "キャラ11", "キャラ12"]} />
           <GameGroup name={"作品5"} chars={["キャラ13", "キャラ14", "キャラ15"]} />
