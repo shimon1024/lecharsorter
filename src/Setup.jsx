@@ -36,11 +36,11 @@ export default function Setup() {
 
       <span className="setup-numchars-container">
         ランキング人数
-        <select className="setup-numchars">
+        <select className="setup-numchars" defaultValue="10">
           <option>1位のみ</option>
           <option>3位まで</option>
           <option>5位まで</option>
-          <option selected>10位まで</option>
+          <option value="10">10位まで</option>
           <option>20位まで</option>
           <option>すべて</option>
         </select>
