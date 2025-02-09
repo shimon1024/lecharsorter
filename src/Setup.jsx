@@ -72,8 +72,6 @@ export default function Setup() {
         <summary>更新履歴</summary>
         こんなかんじでした
       </details>
-
-      <footer className="setup-footer">開発: <a href="https://postfixnotation.org/">志文</a></footer>
     </>
   );
 }
