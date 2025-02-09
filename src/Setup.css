@@ -11,6 +11,7 @@
 }
 
 .setup-title {
+  font-size: clamp(1rem, 10vw, var(--h1-font-size-default));
   margin: 0.375em auto 0.75em;
 }
 
