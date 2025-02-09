@@ -1,7 +1,5 @@
 .root {
-  flex-grow: 1;
-
-  max-width: 52em;
+  max-width: 50rem;
   padding: 1.5rem;
 
   display: grid;

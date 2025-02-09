@@ -2,7 +2,7 @@
   /* reset */
   padding: 0;
 
-  margin: 1em 0.5em;
+  margin: 1em 0 0;
   min-width: 12em;
 }
 
@@ -11,12 +11,14 @@
 }
 
 .setup-title {
-  margin: 0.375em auto;
+  margin: 0.375em auto 0.75em;
 }
 
 .setup-chars-container {
   grid-column: 1 / -1;
+  font-size: 1rem;
   margin: 1em auto;
+  padding: 0.5em 1em;
   background-color: whitesmoke;
   border-radius: 0.5em;
 }
@@ -28,7 +30,8 @@
 }
 
 .setup-numchars-container {
-  margin: 0.25em 0;
+  font-size: 1rem;
+  margin: 0.25em 0 1em;
 }
 
 .setup-numchars {
@@ -36,7 +39,8 @@
 }
 
 .setup-sorter-title-container {
-  margin: 0.25em 0;
+  font-size: 1rem;
+  margin: 0.25em 0 1em;
 }
 
 .setup-sorter-title {
@@ -44,22 +48,26 @@
 }
 
 .setup-start {
-  margin: 1em 0 0.25em;
+  font-size: 1rem;
+  margin: 1.25em 0 0.5em;
   place-self: center center;
   padding-left: 5em;
   padding-right: 5em;
 }
 
 .setup-hr-opts-desc {
+  font-size: 1rem;
   border-width: 0;
   border-bottom: lightgray 1px solid;
   margin: 1.5em 0;
 }
 
 .setup-usage {
+  font-size: 1rem;
   margin: 0.25em 0;
 }
 
 .setup-changelog {
+  font-size: 1rem;
   margin: 0.25em 0;
 }
