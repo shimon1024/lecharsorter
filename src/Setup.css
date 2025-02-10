@@ -17,6 +17,18 @@
   flex-shrink: 0;
 }
 
+.main {
+  width: min(51rem, 95%);
+  padding: 1.5rem;
+
+  display: grid;
+  grid-template-columns: 1fr min(28rem, 100%) 1fr;
+}
+
+.main > * {
+  grid-column: 2;
+}
+
 .setup-title {
   font-size: clamp(1rem, 10vw, var(--h1-font-size-default));
   margin: 0.375em auto 0.75em;
