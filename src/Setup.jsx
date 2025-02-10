@@ -20,7 +20,7 @@ export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
 
   return (
-    <div className="main">
+    <div className="setup">
       <h1 className="setup-title">連縁キャラソート</h1>
 
       <div className="setup-chars-container">
