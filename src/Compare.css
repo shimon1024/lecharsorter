@@ -11,15 +11,14 @@
 }
 
 .compare-title {
+  font-size: clamp(1rem, 10vw, var(--h1-font-size-default));
   margin: 0.375em auto 0.75em;
 }
 
-.compare-char1 {
-  grid-column: 1 / -3;
-}
-
-.compare-char2 {
-  grid-column: 3 / -1;
+.compare-main {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(23rem, 1fr));
 }
 
 .compare-char1,
@@ -27,9 +26,9 @@
   font-size: 1.75rem;
   color: white;
   background-color: var(--xkcd-dark-blue-gray);
-  padding-top: 2em;
-  padding-bottom: 2em;
+  padding: 2rem;
   margin: 1.5rem 0.5rem 0;
+  height: 9rem;
 }
 .compare-char1:hover,
 .compare-char2:hover {
@@ -38,14 +37,6 @@
 .compare-char1:active,
 .compare-char2:active {
   background-color: color-mix(in srgb, var(--xkcd-dark-blue-gray) 80%, white);
-}
-
-.compare-both {
-  grid-column: 1 / -3;
-}
-
-.compare-skip {
-  grid-column: 3 / -1;
 }
 
 .compare-both,
@@ -58,7 +49,7 @@
   grid-column: 1 / -1;
   border-width: 0;
   border-bottom: lightgray 1px solid;
-  margin: 1.5em 0 2.5em;
+  margin: 1.5em 0;
 }
 
 .compare-undo {
@@ -106,5 +97,6 @@
 }
 
 .compare-quit {
-  margin: 1em 8em 0;
+  justify-self: center;
+  margin-top: 1em;
 }
