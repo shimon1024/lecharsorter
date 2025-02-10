@@ -8,7 +8,7 @@ export default function App() {
   return (
     <>
       <Compare sorterTitle="すき" />
-      <footer className="footer">開発: <a href="https://postfixnotation.org/">志文</a></footer>
+      <footer className="footer">開発: <a href="https://postfixnotation.org/" target="_blank">志文</a></footer>
     </>
   )
 }
