@@ -1,0 +1,57 @@
+.result {
+  width: 95%;
+  padding: 1.5rem;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.result-title {
+  font-size: clamp(1rem, 10vw, var(--h1-font-size-default));
+  margin: 0.375em auto 0.75em;
+}
+
+.result-subtitle {
+  font-size: clamp(1rem, 10vw, var(--h2-font-size-default));
+  margin: 0;
+}
+
+.result-chars-container {
+  place-self: stretch;
+  margin-top: 1rem;
+
+  display: grid;
+  grid-template-columns: calc(50% - 1rem) 1fr;
+}
+.result-chars-container > *:nth-child(odd) {
+  justify-self: end;
+}
+.result-chars-container > *:nth-child(even) {
+  justify-self: start;
+}
+
+.result-chars-rank {
+  margin-right: 0.5em;
+}
+
+.result-info {
+  margin-top: 1rem;
+}
+
+.result-hr-main-sub {
+  place-self: center;
+  width: min(20rem, 95%);
+  font-size: 1rem;
+  border-width: 0;
+  border-bottom: lightgray 1px solid;
+  margin: 1.5em 0;
+}
+
+.result-result-link {
+  margin-top: 0.25rem;
+}
+
+.result-retry {
+  margin-top: 1.5rem;
+}
