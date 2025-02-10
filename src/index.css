@@ -4,6 +4,7 @@
   font-weight: 400;
 
   --xkcd-dark-blue-gray: #1f3b4d;
+  --mycolor-green-tea: #f0ffe0;
   --h1-font-size-default: 3.2rem;
 
   color: var(--xkcd-dark-blue-gray);

@@ -1,17 +1,18 @@
-export default function Compare() {
-  return (
-    <>
-      <h1>どっちが...？</h1>
-      <button>キャラ1</button>
-      <button>キャラ2</button>
-      <button>両方</button>
-      <button>一旦パス</button>
-      <button>↶</button>
-      <button>↷</button>
-      <p>(n組目、n%完了、残り最大n組)</p>
-      <button>ソートをやめる</button>
+import './Compare.css'
 
-      <div>開発: <a href="https://postfixnotation.org/">志文</a></div>
-    </>
+export default function Compare({ sorterTitle }) {
+  return (
+    <div className="compare">
+      <h1 className="compare-title">どっちが{sorterTitle}？</h1>
+      <button className="compare-char1">キャラ1</button>
+      <button className="compare-char2">あいうえおかきくけこさしすせそ</button>
+      <button className="compare-both">両方</button>
+      <button className="compare-skip">あとまわし</button>
+      <hr className="compare-hr-main-sub" />
+      <button className="compare-undo">↶</button>
+      <button className="compare-redo">↷</button>
+      <div className="compare-info">(n組目、n%完了、残り最大n組)</div>
+      <button className="compare-quit">ソートをやめる</button>
+    </div>
   );
 }
