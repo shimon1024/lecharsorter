@@ -15,7 +15,7 @@ function WorkGroup({ onCharChange, work }) {
               work.chars.map(c =>
                 <li key={c.id}>
                   <label className="workgroup-char">
-                    <input type="checkbox" onChange={e => onCharChange(c.id, e.target.checked)} />
+                    <input type="checkbox" onChange={e => onCharChange(c, e.target.checked)} />
                     {c.name}
                   </label>
                 </li>
@@ -33,10 +33,10 @@ export default function Setup() {
   const [charSet, setCharSet] = useState(new Set());
   const setScene = useContext(SceneSetContext);
 
-  function onCharChange(id, checked) {
+  function onCharChange(char_, checked) {
     const newCharSet = checked ?
-          charSet.union(new Set([id])) :
-          charSet.difference(new Set([id])) ;
+          charSet.union(new Set([char_.id])) :
+          charSet.difference(new Set([char_.id])) ;
     setCharSet(newCharSet);
   }
 
