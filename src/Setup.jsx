@@ -44,8 +44,8 @@ function WorkGroup({ onWorkChange, onCharChange, workSet, charSet, work }) {
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
   const [isAll, setIsAll] = useState(false);
-  const [workSet, setWorkSet] = useState(new Set());
-  const [charSet, setCharSet] = useState(new Set());
+  const [workSet, setWorkSet] = useState(new Set(le.workIdsDefault));
+  const [charSet, setCharSet] = useState(new Set(le.charIdsDefault));
   const setScene = useContext(SceneSetContext);
 
   function handleAllChange(checked) {

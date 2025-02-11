@@ -208,3 +208,14 @@ export const workAll = [
 export const workIdAll = workAll.map(w => w.id);
 export const charAll = workAll.flatMap(w => w.chars);
 export const charIdAll = charAll.map(c => c.id);
+
+export const worksDefault = [
+  mains,
+  ee,
+  ems,
+  rmi,
+  bpohc
+];
+export const workIdsDefault = worksDefault.map(w => w.id);
+export const charsDefault = worksDefault.flatMap(w => w.chars);
+export const charIdsDefault = charsDefault.map(c => c.id);
