@@ -4,18 +4,30 @@ import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 
-function WorkGroup({ onCharChange, work }) {
+function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
   return (
     <ul className="workgroup-tree">
       <li>
         <details>
-          <summary><label><input type="checkbox" />{work.name}</label></summary>
+          <summary>
+            <label>
+              <input
+                type="checkbox"
+                onChange={e => onWorkChange(work, e.target.checked)}
+              />
+              {work.name}
+            </label>
+          </summary>
           <ul>
             {
               work.chars.map(c =>
                 <li key={c.id}>
                   <label className="workgroup-char">
-                    <input type="checkbox" onChange={e => onCharChange(c, e.target.checked)} />
+                    <input
+                      type="checkbox"
+                      checked={charSet.has(c.id)}
+                      onChange={e => onCharChange(c, e.target.checked)}
+                    />
                     {c.name}
                   </label>
                 </li>
@@ -32,6 +44,13 @@ export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
   const [charSet, setCharSet] = useState(new Set());
   const setScene = useContext(SceneSetContext);
+
+  function onWorkChange(work, checked) {
+    const newCharSet = checked ?
+          charSet.union(new Set(work.chars.map(c => c.id))) :
+          charSet.difference(new Set(work.chars.map(c => c.id))) ;
+    setCharSet(newCharSet);
+  }
 
   function onCharChange(char_, checked) {
     const newCharSet = checked ?
@@ -59,7 +78,7 @@ export default function Setup() {
               le.videos,
               le.others,
             ].map((w, i) =>
-              <WorkGroup key={i} onCharChange={onCharChange} work={w} />
+              <WorkGroup key={i} onWorkChange={onWorkChange} onCharChange={onCharChange} charSet={charSet} work={w} />
             )
           }
         </div>
