@@ -34,7 +34,7 @@ export default function Setup() {
       <h1 className="setup-title">連縁キャラソート</h1>
 
       <div className="setup-chars-container">
-        <label><input type="checkbox" />すべて</label>
+        <label><input type="checkbox" />全員</label>
         <div className="setup-chars-gamegroup-container">
           <GameGroup work={le.mains} />
           <GameGroup work={le.ee} />
@@ -56,7 +56,7 @@ export default function Setup() {
           <option>5位まで</option>
           <option value="10">10位まで</option>
           <option>20位まで</option>
-          <option>すべて</option>
+          <option>全員</option>
         </select>
       </span>
 
