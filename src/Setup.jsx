@@ -4,7 +4,7 @@ import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 
-function WorkGroup({ work }) {
+function WorkGroup({ onCharChange, work }) {
   return (
     <ul className="workgroup-tree">
       <li>
@@ -15,7 +15,7 @@ function WorkGroup({ work }) {
               work.chars.map(c =>
                 <li key={c.id}>
                   <label className="workgroup-char">
-                    <input type="checkbox" />
+                    <input type="checkbox" onChange={e => onCharChange(c.id, e.target.checked)} />
                     {c.name}
                   </label>
                 </li>
@@ -30,7 +30,15 @@ function WorkGroup({ work }) {
 
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
+  const [charSet, setCharSet] = useState(new Set());
   const setScene = useContext(SceneSetContext);
+
+  function onCharChange(id, checked) {
+    const newCharSet = checked ?
+          charSet.union(new Set([id])) :
+          charSet.difference(new Set([id])) ;
+    setCharSet(newCharSet);
+  }
 
   return (
     <div className="setup">
@@ -39,15 +47,15 @@ export default function Setup() {
       <div className="setup-chars-container">
         <label><input type="checkbox" />全員</label>
         <div className="setup-chars-workgroup-container">
-          <WorkGroup work={le.mains} />
-          <WorkGroup work={le.ee} />
-          <WorkGroup work={le.ems} />
-          <WorkGroup work={le.rmi} />
-          <WorkGroup work={le.bpohc} />
-          <WorkGroup work={le.botc} />
-          <WorkGroup work={le.albums} />
-          <WorkGroup work={le.videos} />
-          <WorkGroup work={le.others} />
+          <WorkGroup onCharChange={onCharChange} work={le.mains} />
+          <WorkGroup onCharChange={onCharChange} work={le.ee} />
+          <WorkGroup onCharChange={onCharChange} work={le.ems} />
+          <WorkGroup onCharChange={onCharChange} work={le.rmi} />
+          <WorkGroup onCharChange={onCharChange} work={le.bpohc} />
+          <WorkGroup onCharChange={onCharChange} work={le.botc} />
+          <WorkGroup onCharChange={onCharChange} work={le.albums} />
+          <WorkGroup onCharChange={onCharChange} work={le.videos} />
+          <WorkGroup onCharChange={onCharChange} work={le.others} />
         </div>
       </div>
 
@@ -77,7 +85,14 @@ export default function Setup() {
 
       <button
         className="setup-start"
-        onClick={() => setScene(<Compare sorterTitle="すき" />)}
+        onClick={() =>
+          setScene(
+            <Compare
+              sorterTitle="すき"
+              charIds={Array.from(charSet).toSorted((a, b) => a - b)}
+            />
+          )
+        }
       >
         はじめる
       </button>
