@@ -1,4 +1,4 @@
-import './Compare.css'
+import './Compare.css';
 
 export default function Compare({ sorterTitle }) {
   return (

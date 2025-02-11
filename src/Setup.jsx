@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import './Setup.css'
-import * as le from './lenen.js'
+import { useState } from 'react';
+import './Setup.css';
+import * as le from './lenen.js';
 
 function GameGroup({ work }) {
   return (
