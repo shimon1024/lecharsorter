@@ -1,14 +1,24 @@
 import { useState } from 'react'
 import './Setup.css'
+import * as le from './lenen.js'
 
-function GameGroup({name, chars}) {
+function GameGroup({ work }) {
   return (
     <ul className="gamegroup-tree">
       <li>
         <details>
-          <summary><label><input type="checkbox" />{name}</label></summary>
+          <summary><label><input type="checkbox" />{work.name}</label></summary>
           <ul>
-            {chars.map((c, i) => <li key={i}><label className="gamegroup-char"><input type="checkbox" />{c}</label></li>)}
+            {
+              work.chars.map(c =>
+                <li key={c.id}>
+                  <label className="gamegroup-char">
+                    <input type="checkbox" />
+                    {c.name}
+                  </label>
+                </li>
+              )
+            }
           </ul>
         </details>
       </li>
@@ -26,11 +36,15 @@ export default function Setup() {
       <div className="setup-chars-container">
         <label><input type="checkbox" />すべて</label>
         <div className="setup-chars-gamegroup-container">
-          <GameGroup name={'作品1'} chars={['キャラ1', 'キャラ2', 'キャラ3']} />
-          <GameGroup name={'作品2'} chars={['キャラ4', 'キャラ5', 'あいうえおかきくけこさしすせそたちつてと']} />
-          <GameGroup name={'作品3'} chars={['キャラ7', 'キャラ8', '龍龍龍龍龍龍龍龍']} />
-          <GameGroup name={'作品4'} chars={['キャラ10', 'キャラ11', 'キャラ12']} />
-          <GameGroup name={'作品5'} chars={['キャラ13', 'キャラ14', 'キャラ15']} />
+          <GameGroup work={le.mains} />
+          <GameGroup work={le.ee} />
+          <GameGroup work={le.ems} />
+          <GameGroup work={le.rmi} />
+          <GameGroup work={le.bpohc} />
+          <GameGroup work={le.botc} />
+          <GameGroup work={le.albums} />
+          <GameGroup work={le.videos} />
+          <GameGroup work={le.others} />
         </div>
       </div>
 
