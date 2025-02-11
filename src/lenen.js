@@ -193,3 +193,18 @@ export const botc = works[countWorks++];
 export const albums = works[countWorks++];
 export const videos = works[countWorks++];
 export const others = works[countWorks++];
+
+export const workAll = [
+  mains,
+  ee,
+  ems,
+  rmi,
+  bpohc,
+  botc,
+  albums,
+  videos,
+  others,
+];
+export const workIdAll = workAll.map(w => w.id);
+export const charAll = workAll.flatMap(w => w.chars);
+export const charIdAll = charAll.map(c => c.id);

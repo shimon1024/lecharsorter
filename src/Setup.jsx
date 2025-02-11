@@ -4,7 +4,7 @@ import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 
-function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
+function WorkGroup({ onWorkChange, onCharChange, workSet, charSet, work }) {
   return (
     <ul className="workgroup-tree">
       <li>
@@ -13,6 +13,7 @@ function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
             <label>
               <input
                 type="checkbox"
+                checked={workSet.has(work.id)}
                 onChange={e => onWorkChange(work, e.target.checked)}
               />
               {work.name}
@@ -42,20 +43,41 @@ function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
 
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
+  const [isAll, setIsAll] = useState(false);
+  const [workSet, setWorkSet] = useState(new Set());
   const [charSet, setCharSet] = useState(new Set());
   const setScene = useContext(SceneSetContext);
 
-  function onWorkChange(work, checked) {
+  function handleAllChange(checked) {
+    const newWorkSet = checked ?
+          new Set(le.workIdAll) :
+          new Set();
+    setWorkSet(newWorkSet);
+
+    const newCharSet = checked ?
+          new Set(le.charIdAll) :
+          new Set();
+    setCharSet(newCharSet);
+
+    setIsAll(!isAll);
+  }
+
+  function handleWorkChange(work, checked) {
+    const newWorkSet = checked ?
+          workSet.union(new Set([work.id])) :
+          workSet.difference(new Set([work.id]));
+    setWorkSet(newWorkSet);
+
     const newCharSet = checked ?
           charSet.union(new Set(work.chars.map(c => c.id))) :
-          charSet.difference(new Set(work.chars.map(c => c.id))) ;
+          charSet.difference(new Set(work.chars.map(c => c.id)));
     setCharSet(newCharSet);
   }
 
-  function onCharChange(char_, checked) {
+  function handleCharChange(char_, checked) {
     const newCharSet = checked ?
           charSet.union(new Set([char_.id])) :
-          charSet.difference(new Set([char_.id])) ;
+          charSet.difference(new Set([char_.id]));
     setCharSet(newCharSet);
   }
 
@@ -64,21 +86,26 @@ export default function Setup() {
       <h1 className="setup-title">連縁キャラソート</h1>
 
       <div className="setup-chars-container">
-        <label><input type="checkbox" />全員</label>
+        <label>
+          <input
+            type="checkbox"
+            checked={isAll}
+            onChange={e => handleAllChange(e.target.checked)}
+          />
+          全員
+        </label>
+
         <div className="setup-chars-workgroup-container">
           {
-            [
-              le.mains,
-              le.ee,
-              le.ems,
-              le.rmi,
-              le.bpohc,
-              le.botc,
-              le.albums,
-              le.videos,
-              le.others,
-            ].map((w, i) =>
-              <WorkGroup key={i} onWorkChange={onWorkChange} onCharChange={onCharChange} charSet={charSet} work={w} />
+            le.workAll.map((w, i) =>
+              <WorkGroup
+                key={i}
+                onWorkChange={handleWorkChange}
+                onCharChange={handleCharChange}
+                workSet={workSet}
+                charSet={charSet}
+                work={w}
+              />
             )
           }
         </div>
