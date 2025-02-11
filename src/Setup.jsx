@@ -47,15 +47,21 @@ export default function Setup() {
       <div className="setup-chars-container">
         <label><input type="checkbox" />全員</label>
         <div className="setup-chars-workgroup-container">
-          <WorkGroup onCharChange={onCharChange} work={le.mains} />
-          <WorkGroup onCharChange={onCharChange} work={le.ee} />
-          <WorkGroup onCharChange={onCharChange} work={le.ems} />
-          <WorkGroup onCharChange={onCharChange} work={le.rmi} />
-          <WorkGroup onCharChange={onCharChange} work={le.bpohc} />
-          <WorkGroup onCharChange={onCharChange} work={le.botc} />
-          <WorkGroup onCharChange={onCharChange} work={le.albums} />
-          <WorkGroup onCharChange={onCharChange} work={le.videos} />
-          <WorkGroup onCharChange={onCharChange} work={le.others} />
+          {
+            [
+              le.mains,
+              le.ee,
+              le.ems,
+              le.rmi,
+              le.bpohc,
+              le.botc,
+              le.albums,
+              le.videos,
+              le.others,
+            ].map((w, i) =>
+              <WorkGroup key={i} onCharChange={onCharChange} work={w} />
+            )
+          }
         </div>
       </div>
 
