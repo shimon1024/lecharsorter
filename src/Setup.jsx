@@ -46,6 +46,7 @@ export default function Setup() {
   const [isAll, setIsAll] = useState(false);
   const [workSet, setWorkSet] = useState(new Set(le.workIdsDefault));
   const [charSet, setCharSet] = useState(new Set(le.charIdsDefault));
+  const [numRankChars, setNumRankChars] = useState(10);
   const setScene = useContext(SceneSetContext);
 
   function handleAllChange(checked) {
@@ -113,13 +114,17 @@ export default function Setup() {
 
       <span className="setup-numchars-container">
         ランキング人数
-        <select className="setup-numchars" defaultValue="10">
-          <option>1位のみ</option>
-          <option>3位まで</option>
-          <option>5位まで</option>
+        <select
+          className="setup-numchars"
+          value={String(numRankChars)}
+          onChange={e => setNumRankChars(Number(e.target.value))}
+        >
+          <option value="1">1位のみ</option>
+          <option value="3">3位まで</option>
+          <option value="5">5位まで</option>
           <option value="10">10位まで</option>
-          <option>20位まで</option>
-          <option>全員</option>
+          <option value="20">20位まで</option>
+          <option value={String(le.charAll.length)}>全員</option>
         </select>
       </span>
 
@@ -140,8 +145,9 @@ export default function Setup() {
         onClick={() =>
           setScene(
             <Compare
-              sorterTitle="すき"
               charIds={Array.from(charSet).toSorted((a, b) => a - b)}
+              numRankChars={numRankChars}
+              sorterTitle={sorterTitle}
             />
           )
         }

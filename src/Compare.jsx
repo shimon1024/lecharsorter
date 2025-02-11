@@ -1,6 +1,6 @@
 import './Compare.css';
 
-export default function Compare({ sorterTitle, charIds }) {
+export default function Compare({ charIds, numRankChars, sorterTitle }) {
   return (
     <div className="compare">
       <h1 className="compare-title">どっちが{sorterTitle}？</h1>
