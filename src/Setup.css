@@ -1,19 +1,19 @@
-.gamegroup-tree {
+.workgroup-tree {
   /* reset */
   padding: 0;
 
   margin: 1em 0 0;
 }
 
-.gamegroup-tree li {
+.workgroup-tree li {
   list-style-type: none;
 }
 
-.gamegroup-char {
+.workgroup-char {
   display: inline-flex;
   place-items: start;
 }
-.gamegroup-char > input[type="checkbox"] {
+.workgroup-char > input[type="checkbox"] {
   flex-shrink: 0;
 }
 
@@ -46,7 +46,7 @@
   width: 100%;
 }
 
-.setup-chars-gamegroup-container {
+.setup-chars-workgroup-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12.25em, 1fr));
 }

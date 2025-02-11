@@ -2,9 +2,9 @@ import { useState } from 'react';
 import './Setup.css';
 import * as le from './lenen.js';
 
-function GameGroup({ work }) {
+function WorkGroup({ work }) {
   return (
-    <ul className="gamegroup-tree">
+    <ul className="workgroup-tree">
       <li>
         <details>
           <summary><label><input type="checkbox" />{work.name}</label></summary>
@@ -12,7 +12,7 @@ function GameGroup({ work }) {
             {
               work.chars.map(c =>
                 <li key={c.id}>
-                  <label className="gamegroup-char">
+                  <label className="workgroup-char">
                     <input type="checkbox" />
                     {c.name}
                   </label>
@@ -35,16 +35,16 @@ export default function Setup() {
 
       <div className="setup-chars-container">
         <label><input type="checkbox" />全員</label>
-        <div className="setup-chars-gamegroup-container">
-          <GameGroup work={le.mains} />
-          <GameGroup work={le.ee} />
-          <GameGroup work={le.ems} />
-          <GameGroup work={le.rmi} />
-          <GameGroup work={le.bpohc} />
-          <GameGroup work={le.botc} />
-          <GameGroup work={le.albums} />
-          <GameGroup work={le.videos} />
-          <GameGroup work={le.others} />
+        <div className="setup-chars-workgroup-container">
+          <WorkGroup work={le.mains} />
+          <WorkGroup work={le.ee} />
+          <WorkGroup work={le.ems} />
+          <WorkGroup work={le.rmi} />
+          <WorkGroup work={le.bpohc} />
+          <WorkGroup work={le.botc} />
+          <WorkGroup work={le.albums} />
+          <WorkGroup work={le.videos} />
+          <WorkGroup work={le.others} />
         </div>
       </div>
 
