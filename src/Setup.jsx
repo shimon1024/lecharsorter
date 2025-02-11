@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import './Setup.css';
+import { SceneSetContext } from './SceneContext.jsx';
+import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 
 function WorkGroup({ work }) {
@@ -28,6 +30,7 @@ function WorkGroup({ work }) {
 
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
+  const setScene = useContext(SceneSetContext);
 
   return (
     <div className="setup">
@@ -72,7 +75,12 @@ export default function Setup() {
         ？
       </span>
 
-      <button className="setup-start">はじめる</button>
+      <button
+        className="setup-start"
+        onClick={() => setScene(<Compare sorterTitle="すき" />)}
+      >
+        はじめる
+      </button>
 
       <hr className="setup-hr-opts-desc" />
 
