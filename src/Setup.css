@@ -51,12 +51,12 @@
   grid-template-columns: repeat(auto-fit, minmax(12.25em, 1fr));
 }
 
-.setup-numchars-container {
+.setup-numrankchars-container {
   font-size: 1rem;
   margin: 0.25em 0 1em;
 }
 
-.setup-numchars {
+.setup-numrankchars {
   margin-left: 0.25em;
 }
 

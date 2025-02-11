@@ -112,10 +112,10 @@ export default function Setup() {
         </div>
       </div>
 
-      <span className="setup-numchars-container">
+      <span className="setup-numrankchars-container">
         ランキング人数
         <select
-          className="setup-numchars"
+          className="setup-numrankchars"
           value={String(numRankChars)}
           onChange={e => setNumRankChars(Number(e.target.value))}
         >
