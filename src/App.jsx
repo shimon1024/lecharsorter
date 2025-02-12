@@ -1,11 +1,7 @@
-import { useContext } from 'react';
 import './App.css';
-import { SceneProvider, SceneContext } from './SceneContext.jsx';
+import { SceneProvider } from './SceneContext.jsx';
+import Scene from './Scene.jsx';
 import Setup from './Setup.jsx';
-
-function Scene() {
-  return useContext(SceneContext);
-}
 
 export default function App() {
   return (
