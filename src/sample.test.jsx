@@ -1,7 +1,7 @@
-import React from 'react';
+import { expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 test('チェックボックスをクリックして有効にする', async () => {
   const user = userEvent.setup();
