@@ -116,7 +116,7 @@ export class Work {
 
 export const works = [null];
 let countWorks = 1;
-works.push(new Work(countWorks++, '主人公', [
+works.push(new Work(countWorks++, '主要人物', [
   yabusame,
   tsubakura,
   suzumi,
