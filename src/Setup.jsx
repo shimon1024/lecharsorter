@@ -4,7 +4,7 @@ import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 
-function WorkGroup({ onWorkChange, onCharChange, workSet, charSet, work }) {
+function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
   return (
     <ul className="workgroup-tree">
       <li>
@@ -13,7 +13,7 @@ function WorkGroup({ onWorkChange, onCharChange, workSet, charSet, work }) {
             <label>
               <input
                 type="checkbox"
-                checked={workSet.has(work.id)}
+                checked={charSet.isSupersetOf(new Set(work.chars.map(c => c.id)))}
                 onChange={e => onWorkChange(work, e.target.checked)}
               />
               {work.name}
@@ -43,32 +43,18 @@ function WorkGroup({ onWorkChange, onCharChange, workSet, charSet, work }) {
 
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
-  const [isAll, setIsAll] = useState(false);
-  const [workSet, setWorkSet] = useState(new Set(le.workIdsDefault));
   const [charSet, setCharSet] = useState(new Set(le.charIdsDefault));
   const [numRankChars, setNumRankChars] = useState(10);
   const setScene = useContext(SceneSetContext);
 
   function handleAllChange(checked) {
-    const newWorkSet = checked ?
-          new Set(le.workIdAll) :
-          new Set();
-    setWorkSet(newWorkSet);
-
     const newCharSet = checked ?
           new Set(le.charIdAll) :
           new Set();
     setCharSet(newCharSet);
-
-    setIsAll(!isAll);
   }
 
   function handleWorkChange(work, checked) {
-    const newWorkSet = checked ?
-          workSet.union(new Set([work.id])) :
-          workSet.difference(new Set([work.id]));
-    setWorkSet(newWorkSet);
-
     const newCharSet = checked ?
           charSet.union(new Set(work.chars.map(c => c.id))) :
           charSet.difference(new Set(work.chars.map(c => c.id)));
@@ -90,7 +76,7 @@ export default function Setup() {
         <label>
           <input
             type="checkbox"
-            checked={isAll}
+            checked={charSet.isSupersetOf(new Set(le.charIdAll))}
             onChange={e => handleAllChange(e.target.checked)}
           />
           全員
@@ -103,7 +89,6 @@ export default function Setup() {
                 key={i}
                 onWorkChange={handleWorkChange}
                 onCharChange={handleCharChange}
-                workSet={workSet}
                 charSet={charSet}
                 work={w}
               />
