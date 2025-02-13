@@ -43,7 +43,10 @@ describe('キャラソートのタイトル入力', () => {
     expect(compareSceneHeading.textContent).toEqual('どっちが？');
   });
 
-  test('入力欄に最大長入力する', async () => {
+  test.each([
+    [128, 128],
+    [129, 128],
+  ])('入力欄に長さ%iの文字列を入力すると、比較画面に長さ%iの文字列が渡される', async (inputLength, expectedLength) => {
     const user = userEvent.setup();
     render(
       <SceneProvider defaultScene={<Setup />}>
@@ -51,8 +54,7 @@ describe('キャラソートのタイトル入力', () => {
       </SceneProvider>
     );
 
-    const inputString = 'x'.repeat(128);
-
+    const inputString = 'x'.repeat(inputLength);
     const inputSorterTitle = within(screen.getByText(/^どっちが/)).getByRole('textbox');
     await user.clear(inputSorterTitle);
     await user.type(inputSorterTitle, inputString);
@@ -60,28 +62,8 @@ describe('キャラソートのタイトル入力', () => {
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
     await user.click(screen.getByText('はじめる'));
 
+    const expectedString = 'x'.repeat(expectedLength);
     const compareSceneHeading = await screen.findByRole('heading', { level: 1 });
-    expect(compareSceneHeading.textContent).toEqual(`どっちが${inputString}？`);
-  });
-
-  test('入力欄に最大長+1入力する', async () => {
-    const user = userEvent.setup();
-    render(
-      <SceneProvider defaultScene={<Setup />}>
-        <Scene />
-      </SceneProvider>
-    );
-
-    const inputString = 'x'.repeat(129);
-
-    const inputSorterTitle = within(screen.getByText(/^どっちが/)).getByRole('textbox');
-    await user.clear(inputSorterTitle);
-    await user.type(inputSorterTitle, inputString);
-
-    await user.click(screen.getByRole('checkbox', { name: '全員' }));
-    await user.click(screen.getByText('はじめる'));
-
-    const compareSceneHeading = await screen.findByRole('heading', { level: 1 });
-    expect(compareSceneHeading.textContent).toEqual(`どっちが${inputString.substring(1)}？`);
+    expect(compareSceneHeading.textContent).toEqual(`どっちが${expectedString}？`);
   });
 });
