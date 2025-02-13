@@ -190,7 +190,6 @@ describe('ランキング人数の選択', () => {
       ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
       [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
     ],
-
     // キャラ解除
     [
       ['鳳聯藪雨'],
