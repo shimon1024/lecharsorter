@@ -72,7 +72,7 @@ export default function Setup() {
     <div className="setup">
       <h1 className="setup-title">連縁キャラソート</h1>
 
-      <div className="setup-chars-container">
+      <div className="setup-chars-container" data-testid="setup-chars-container">
         <label>
           <input
             type="checkbox"
@@ -130,7 +130,7 @@ export default function Setup() {
         onClick={() =>
           setScene(
             <Compare
-              charIds={Array.from(charSet).toSorted((a, b) => a - b)}
+              charIds={charSet}
               numRankChars={numRankChars}
               sorterTitle={sorterTitle}
             />

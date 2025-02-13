@@ -91,9 +91,9 @@ describe('ランキング人数の選択', () => {
     await screen.findByRole('heading', { level: 1 });
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIds: expect.arrayContaining(le.charIdAll),
+        charIds: new Set(le.charIdAll),
         numRankChars: 10,
-        sorterTitle: 'すき'
+        sorterTitle: 'すき',
       },
       expect.anything()
     );
@@ -125,9 +125,125 @@ describe('ランキング人数の選択', () => {
     await screen.findByRole('heading', { level: 1 });
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIds: expect.arrayContaining(le.charIdAll),
+        charIds: new Set(le.charIdAll),
         numRankChars: argNumRankChars,
-        sorterTitle: 'すき'
+        sorterTitle: 'すき',
+      },
+      expect.anything()
+    );
+  });
+});
+
+describe('ランキング人数の選択', () => {
+  test.each([
+    // 何もしない
+    [
+      [],
+      le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]),
+      le.worksDefault.flatMap(w => w.chars.map(c => c.id)),
+    ],
+    // (部分選択->)全選択
+    [
+      ['全員'],
+      ['全員', ...le.workAll.flatMap(w => [w.name, ...(w.chars.map(c => c.name))])],
+      le.charIdAll,
+    ],
+    // 全選択->全解除
+    [
+      ['全員', '全員'],
+      [],
+      [],
+    ],
+    // 全選択->部分選択->全選択
+    [
+      ['全員', '鳳聯藪雨', '全員'],
+      ['全員', ...le.workAll.flatMap(w => [w.name, ...(w.chars.map(c => c.name))])],
+      le.charIdAll,
+    ],
+    // 全解除->部分選択->全選択
+    [
+      ['全員', '全員', '鳳聯藪雨', '全員'],
+      ['全員', ...le.workAll.flatMap(w => [w.name, ...(w.chars.map(c => c.name))])],
+      le.charIdAll,
+    ],
+    // 作品解除
+    [
+      ['主要人物'],
+      [le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => [w.name, ...(w.chars.map(c => c.name))]),
+      [le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => w.chars.map(c => c.id)),
+    ],
+    // 作品選択
+    [
+      ['音楽CD'],
+      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
+      [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+    ],
+    // 作品解除->部分選択->作品選択
+    [
+      ['音楽CD', '音楽CD', 'ハル', '音楽CD'],
+      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
+      [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+    ],
+    // 部分選択->作品選択
+    [
+      ['ハル', '音楽CD'],
+      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
+      [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+    ],
+
+    // キャラ解除
+    [
+      ['鳳聯藪雨'],
+      ['燕楽玄鳥', '國主雀巳', ...([le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
+      [le.tsubakura.id, le.suzumi.id, ...([le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => w.chars.map(c => c.id)))],
+    ],
+    // キャラ選択
+    [
+      ['ハル'],
+      ['ハル', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
+      [le.haru.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+    ],
+    // キャラ選択->キャラ解除
+    [
+      ['ハル', 'ハル'],
+      le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]),
+      le.worksDefault.flatMap(w => w.chars.map(c => c.id)),
+    ],
+  ])('%jにチェックすると%jにチェックが入り、%jが比較画面に渡される', async (
+    selectingCheckBoxes,
+    expectedCheckedBoxes,
+    expectedCharIds
+  ) => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    for (const boxName of selectingCheckBoxes) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    const setupCharsContainer = screen.getByTestId('setup-chars-container');
+    const allChoices = setupCharsContainer.querySelectorAll('label:has(input[type="checkbox"])');
+    const choiceTexts = [];
+    for (const l of allChoices) {
+      if (l.querySelector('input[type="checkbox"]').checked) {
+         choiceTexts.push(l.textContent);
+      }
+    }
+
+    expect(new Set(choiceTexts)).toEqual(new Set(expectedCheckedBoxes));
+
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByRole('heading', { level: 1 });
+    expect(Compare).toHaveBeenCalledWith(
+      {
+        charIds: new Set(expectedCharIds),
+        numRankChars: 10,
+        sorterTitle: 'すき',
       },
       expect.anything()
     );
