@@ -49,8 +49,8 @@ describe('キャラソートのタイトル入力', () => {
   });
 
   test.each([
-    [128, 128],
-    [129, 128],
+    [64, 64],
+    [65, 64],
   ])('入力欄に長さ%iの文字列を入力すると、比較画面に長さ%iの文字列が渡される', async (
     inputLength,
     expectedLength
@@ -62,7 +62,7 @@ describe('キャラソートのタイトル入力', () => {
       </SceneProvider>
     );
 
-    const inputString = 'x'.repeat(inputLength);
+    const inputString = 'ぬ'.repeat(inputLength);
     const inputSorterTitle = within(screen.getByText(/^どっちが/)).getByRole('textbox');
     await user.clear(inputSorterTitle);
     await user.type(inputSorterTitle, inputString);
@@ -70,7 +70,7 @@ describe('キャラソートのタイトル入力', () => {
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
     await user.click(screen.getByText('はじめる'));
 
-    const expectedString = 'x'.repeat(expectedLength);
+    const expectedString = 'ぬ'.repeat(expectedLength);
     const compareSceneHeading = await screen.findByRole('heading', { level: 1 });
     expect(compareSceneHeading.textContent).toEqual(`どっちが${expectedString}？`);
   });
