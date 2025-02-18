@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import * as b64 from './base64.js';
 
-describe('Uint8Array->Base64', () => {
+describe('Uint8Array -> Base64', () => {
   test('空入力', async () => {
     const emptyB64 = b64.Uint8ArrayToBase64(Uint8Array.from([]), { alphabet: 'base64url', omitPadding: true });
     expect(emptyB64).toEqual('');
@@ -15,10 +15,22 @@ describe('Uint8Array->Base64', () => {
   });
 });
 
-describe('Base64->Uint8Array', () => {
+describe('Base64 -> Uint8Array', () => {
   test('空入力', async () => {
     const emptyBytes = b64.Uint8ArrayFromBase64('', { alphabet: 'base64url' });
     expect(emptyBytes).toEqual(Uint8Array.from([]));
+  });
+
+  test.each([
+    ['Zg', [102]], // f
+    ['Zm8', [102, 111]], // fo
+    ['Zm9v', [102, 111, 111]], // foo
+  ])('パディング全パターン: %s -> %j', async (
+    inputB64String,
+    expectedByteArray
+  ) => {
+    const bytes = b64.Uint8ArrayFromBase64(inputB64String, { alphabet: 'base64url' });
+    expect(bytes).toEqual(Uint8Array.from(expectedByteArray));
   });
 
   test('全バイト', async () => {
