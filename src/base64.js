@@ -11,7 +11,7 @@ export function Uint8ArrayFromBase64(string, options = {}) {
     throw err;
   }
 
-  string = string.concat('='.repeat((4 - string.length % 4) % 4)).replaceAll('-', '+').replaceAll('_', '/');
+  string = string.replaceAll('-', '+').replaceAll('_', '/');
   return Uint8Array.from(atob(string), c => c.charCodeAt(0));
 }
 
@@ -21,7 +21,7 @@ export function Uint8ArrayToBase64(uint8array, options = {}) {
   }
 
   const { alphabet = 'base64', omitPadding = false } = options;
-  if (!(alphabet === 'base64url' && omitPadding)) {
+  if (!(alphabet === 'base64url' && !omitPadding)) {
     const err = alphabet === 'base64' ?
           new Error('unimplemented') :
           new TypeError();
@@ -29,5 +29,5 @@ export function Uint8ArrayToBase64(uint8array, options = {}) {
   }
 
   const bstr = Array.from(uint8array, b => String.fromCharCode(b)).reduce((s, c) => s + c, '');
-  return btoa(bstr).replace(/=*$/, '').replaceAll('+', '-').replaceAll('/', '_');
+  return btoa(bstr).replaceAll('+', '-').replaceAll('/', '_');
 }
