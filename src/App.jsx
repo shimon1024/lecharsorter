@@ -14,5 +14,5 @@ export default function App() {
         <span>このプログラムは非公式です。</span>
       </footer>
     </>
-  )
+  );
 }

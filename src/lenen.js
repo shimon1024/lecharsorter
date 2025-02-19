@@ -5,6 +5,7 @@ export class Character {
   }
 }
 
+// NOTE: 255 is reserved (rank delimiter)
 export const chars = [null];
 let countChars = 1;
 chars.push(new Character(countChars++, '鳳聯藪雨'));
