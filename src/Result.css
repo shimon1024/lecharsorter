@@ -1,5 +1,5 @@
 .result {
-  width: 95%;
+  width: min(51rem, 95%);
   padding: 1.5rem;
 
   display: grid;
@@ -8,7 +8,7 @@
 }
 
 .result-title {
-  font-size: clamp(1rem, 10vw, var(--h1-font-size-default));
+  font-size: clamp(1rem, 10vw, var(--h2-font-size-default));
   margin: 0.375em auto 0.75em;
 }
 
@@ -20,9 +20,10 @@
 .result-chars-container {
   place-self: stretch;
   margin-top: 1rem;
+  font-size: 1.5rem;
 
   display: grid;
-  grid-template-columns: calc(50% - 1rem) 1fr;
+  grid-template-columns: calc(50% - 2rem) 1fr;
 }
 .result-chars-container > *:nth-child(odd) {
   justify-self: end;
