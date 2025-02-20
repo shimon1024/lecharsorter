@@ -24,13 +24,13 @@ export default function Result({ sorterTitle, chars, minutes, nCompares }) {
     rank += chars[i].length;
   }
 
-  const viewerURL = new URL(sorterURLBase);
+  const viewerURL = new URL(sorterURLBase); // javascriptスキームインジェクションに注意
   viewerURL.searchParams.set('c', 'v');
   viewerURL.searchParams.set('v', '1');
   viewerURL.searchParams.set('d', b64.Uint8ArrayToBase64(encoding.encodeResultData(1, chars, sorterTitle), { alphabet: 'base64url' }));
 
   const xRanking = ranking.slice(0, 3).map(r => `${r.rank}位 ${le.chars[r.charId].name}\n`).reduce((a, s) => a + s, '');
-  const xPostURL = new URL(xPostURLBase);
+  const xPostURL = new URL(xPostURLBase); // javascriptスキームインジェクションに注意
   xPostURL.searchParams.set('url', viewerURL.toString());
   xPostURL.searchParams.set('text', `\
 連縁キャラソート${sorterTitle}ランキング
