@@ -3,6 +3,7 @@ import './Setup.css';
 import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
+import * as random from './random.js';
 
 function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
   return (
@@ -130,9 +131,10 @@ export default function Setup() {
         onClick={() =>
           setScene(
             <Compare
-              charIds={charSet}
+              charIdSet={charSet}
               numRankChars={numRankChars}
               sorterTitle={sorterTitle}
+              randSeed={random.genSeed()}
             />
           )
         }
