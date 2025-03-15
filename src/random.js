@@ -24,6 +24,7 @@ export function shuffle(array, state) {
   return [shuffled, prng.getState()];
 }
 
+// min以上max以下の一様分布の整数を返す
 export function nextInt(min, max, state) {
   const prng = prand.xoroshiro128plus.fromState(state);
   const num = prand.unsafeUniformIntDistribution(min, max, prng);
