@@ -5,9 +5,12 @@ import { SceneSetContext } from './SceneContext.jsx';
 import * as le from './lenen.js'
 import * as sorter from './sorter.js';
 
-// TODO numRankChars
 export default function Compare({ charIdSet, numRankChars, sorterTitle, randSeed }) {
-  const [sortHistory, dispatchSortHistory] = useReducer(sorter.reduceSortHistory, { charIdSet, randSeed }, sorter.newSortHistory);
+  const [sortHistory, dispatchSortHistory] = useReducer(
+    sorter.reduceSortHistory,
+    { charIdSet, numRanks, randSeed },
+    sorter.newSortHistory
+  );
   const setScene = useContext(SceneSetContext);
 
   const { heaptree, ai, bi, aj, bj, sortState } = sortHistory.steps[sortHistory.currentStep];
