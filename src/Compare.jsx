@@ -53,8 +53,18 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
         どちらも
       </button>
       <hr className="compare-hr-main-sub" />
-      <button className="compare-undo">↶</button>
-      <button className="compare-redo">↷</button>
+      <button
+        className="compare-undo"
+        onClick={() => {dispatchSortHistory({type: 'undo'})}}
+      >
+        ↶
+      </button>
+      <button
+        className="compare-redo"
+        onClick={() => {dispatchSortHistory({type: 'redo'})}}
+      >
+        ↷
+      </button>
       <div className="compare-info">(n組目、n%完了、残り最大n組)</div>
       <button className="compare-quit">キャラソートをやめる</button>
     </div>

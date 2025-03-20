@@ -64,7 +64,7 @@ export function heapsort(sortHistory, compareResult) {
     const step = { heaptree, start, ai, bi, aj, bj, ranking, sortState, root, child, recursiveSiftdownStack, randState };
     return {
       ...sortHistory,
-      steps: sortHistory.steps.concat([step]),
+      steps: sortHistory.steps.slice(0, sortHistory.currentStep + 1).concat([step]), // sliceはredo対応に必要
       currentStep: sortHistory.currentStep + 1,
     };
   }
@@ -237,28 +237,27 @@ export function reduceSortHistory(sortHistory, action) {
     return heapsort(sortHistory, action.result);
   }
   case 'undo': {
-    // TODO impl
-
     if (sortHistory.currentStep > 0) {
-      sortHistory = structuredClone(sortHistory);
-      sortHistory.currentStep--;
+      sortHistory = {
+        ...sortHistory,
+        currentStep: sortHistory.currentStep - 1,
+      };
     }
 
     return sortHistory;
   }
   case 'redo': {
-    // TODO impl
-
     if (sortHistory.currentStep < sortHistory.steps.length - 1) {
-      sortHistory = structuredClone(sortHistory);
-      sortHistory.currentStep++;
+      sortHistory = {
+        ...sortHistory,
+        currentStep: sortHistory.currentStep + 1,
+      };
     }
 
     return sortHistory;
   }
+  default: throw new Error(`unknown action ${action.type}`);
   }
-
-  throw new Error(`unknown action ${action.type}`);
 }
 
 export function newSortHistory({ charIdSet, numRanks, randSeed }) {

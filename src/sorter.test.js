@@ -59,7 +59,7 @@ function compareChars(orderedChars, aId, bId) {
   return ai < bi ? -1 : ai > bi ? 1 : 0;
 }
 
-describe('heapsort', () => {
+describe('reduceSortHistory (compare) / heapsort', () => {
   let shuffle;
 
   beforeEach(() => {
@@ -105,7 +105,7 @@ describe('heapsort', () => {
       const aId = le.chars[step.heaptree[step.ai][step.aj]].id;
       const bId = le.chars[step.heaptree[step.bi][step.bj]].id;
       const cmp = compareChars(expectedChars, aId, bId);
-      sortHistory = sorter.heapsort(sortHistory, cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both');
+      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both'});
     }
 
     expect(sortHistory.steps[sortHistory.currentStep].ranking).toEqual(expectedChars);
@@ -142,11 +142,101 @@ describe('heapsort', () => {
       const aId = le.chars[step.heaptree[step.ai][step.aj]].id;
       const bId = le.chars[step.heaptree[step.bi][step.bj]].id;
       const cmp = compareChars(expectedCharOrder, aId, bId);
-      sortHistory = sorter.heapsort(sortHistory, cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both');
+      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both'});
     }
 
     expect(sortHistory.steps[sortHistory.currentStep].ranking).toEqual(expectedRanking);
   });
 
   // 今回は入力を信頼していいため、異常ケースのテストは省く
+});
+
+describe('reduceSortHistory (undo / redo)', () => {
+  test('前のステップが無い状態でundoしても何も起きない', async () => {
+    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+
+    expect(sortHistory2).toEqual(sortHistory);
+  });
+
+  test('前のステップがある状態でundoすると1つ前に戻る', async () => {
+    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+
+    expect(sortHistory2.version).toEqual(sortHistory.version);
+    expect(sortHistory2.numRanks).toEqual(sortHistory.numRanks);
+    expect(sortHistory2.steps).toEqual(sortHistory.steps);
+    expect(sortHistory2.currentStep).toEqual(sortHistory.currentStep - 1);
+  });
+
+  test('undoしてから選択すると、現在のステップ以降のステップがすべて破棄される(undo前と同じ選択肢を選んだ場合)', async () => {
+    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    const bkSortHistory = structuredClone(sortHistory);
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+
+    expect(sortHistory.version).toEqual(bkSortHistory.version);
+    expect(sortHistory.numRanks).toEqual(bkSortHistory.numRanks);
+
+    expect(bkSortHistory.steps.length).toEqual(4);
+    expect(sortHistory.steps.length).toEqual(3);
+    expect(bkSortHistory.currentStep).toEqual(1);
+    expect(sortHistory.currentStep).toEqual(2);
+
+    expect(sortHistory.steps.slice(0, 3)).toEqual(bkSortHistory.steps.slice(0, 3));
+  });
+
+  test('undoしてから選択すると、現在のステップ以降のステップがすべて破棄される(undo前と異なる選択肢を選んだ場合)', async () => {
+    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    const bkSortHistory = structuredClone(sortHistory);
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'b'});
+
+    expect(sortHistory.version).toEqual(bkSortHistory.version);
+    expect(sortHistory.numRanks).toEqual(bkSortHistory.numRanks);
+
+    expect(bkSortHistory.steps.length).toEqual(4);
+    expect(sortHistory.steps.length).toEqual(3);
+    expect(bkSortHistory.currentStep).toEqual(1);
+    expect(sortHistory.currentStep).toEqual(2);
+
+    expect(sortHistory.steps.slice(0, 2)).toEqual(bkSortHistory.steps.slice(0, 2));
+    expect(sortHistory.steps[2]).not.toEqual(bkSortHistory.steps[2]);
+  });
+
+  test('後のステップが無い状態でredoしても何も起きない', async () => {
+    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'redo'});
+
+    expect(sortHistory2).toEqual(sortHistory);
+  });
+
+  test('後のステップがある状態でredoすると1つ後に戻る', async () => {
+    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+
+    expect(sortHistory2.version).toEqual(sortHistory.version);
+    expect(sortHistory2.numRanks).toEqual(sortHistory.numRanks);
+    expect(sortHistory2.steps).toEqual(sortHistory.steps);
+    expect(sortHistory2.currentStep).toEqual(sortHistory.currentStep - 1);
+
+    const sortHistory3 = sorter.reduceSortHistory(sortHistory, { type: 'redo'});
+
+    expect(sortHistory3.version).toEqual(sortHistory2.version);
+    expect(sortHistory3.numRanks).toEqual(sortHistory2.numRanks);
+    expect(sortHistory3.steps).toEqual(sortHistory2.steps);
+    expect(sortHistory3.currentStep).toEqual(sortHistory2.currentStep + 1);
+
+    expect(sortHistory3).toEqual(sortHistory);
+  });
 });
