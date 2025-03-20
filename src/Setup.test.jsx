@@ -92,7 +92,7 @@ describe('ランキング人数の選択', () => {
     expect(Compare).toHaveBeenCalledWith(
       {
         charIdSet: new Set(le.charIdAll),
-        numRankChars: 10,
+        numRanks: 10,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
       },
@@ -127,7 +127,7 @@ describe('ランキング人数の選択', () => {
     expect(Compare).toHaveBeenCalledWith(
       {
         charIdSet: new Set(le.charIdAll),
-        numRankChars: argNumRankChars,
+        numRanks: argNumRankChars,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
       },
@@ -245,7 +245,7 @@ describe('キャラ/グループの選択', () => {
     expect(Compare).toHaveBeenCalledWith(
       {
         charIdSet: new Set(expectedCharIds),
-        numRankChars: 10,
+        numRanks: 10,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
       },

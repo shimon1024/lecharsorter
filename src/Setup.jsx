@@ -45,7 +45,7 @@ function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
   const [charSet, setCharSet] = useState(new Set(le.charIdsDefault));
-  const [numRankChars, setNumRankChars] = useState(10);
+  const [numRanks, setNumRanks] = useState(10);
   const setScene = useContext(SceneSetContext);
 
   function handleAllChange(checked) {
@@ -98,12 +98,12 @@ export default function Setup() {
         </div>
       </div>
 
-      <span className="setup-numrankchars-container">
+      <span className="setup-numranks-container">
         ランキング人数
         <select
-          className="setup-numrankchars"
-          value={String(numRankChars)}
-          onChange={e => setNumRankChars(Number(e.target.value))}
+          className="setup-numranks"
+          value={String(numRanks)}
+          onChange={e => setNumRanks(Number(e.target.value))}
         >
           <option value="1">1位のみ</option>
           <option value="3">3位まで</option>
@@ -132,7 +132,7 @@ export default function Setup() {
           setScene(
             <Compare
               charIdSet={charSet}
-              numRankChars={numRankChars}
+              numRanks={numRanks}
               sorterTitle={sorterTitle}
               randSeed={random.genSeed()}
             />

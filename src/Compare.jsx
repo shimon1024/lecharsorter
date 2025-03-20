@@ -5,7 +5,7 @@ import { SceneSetContext } from './SceneContext.jsx';
 import * as le from './lenen.js'
 import * as sorter from './sorter.js';
 
-export default function Compare({ charIdSet, numRankChars, sorterTitle, randSeed }) {
+export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) {
   const [sortHistory, dispatchSortHistory] = useReducer(
     sorter.reduceSortHistory,
     { charIdSet, numRanks, randSeed },
