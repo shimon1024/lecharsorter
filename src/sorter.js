@@ -26,6 +26,7 @@ import * as random from './random.js';
 //   version: Number, // フォーマットバージョン。永続化で使用する可能性がある。
 //   numRanks: Number, // ランキングの順位数
 //   // 各比較のすべての履歴を保持する配列
+//   // stepのsortStateがendの場合、そのstepではheaptreeとrankingとsortState以外の値が不定になることに注意。
 //   steps: [
 //     {
 //       heaptree: [[Char ID]], // ヒープ木。同率順位は1つのノードにマージされていくため、二重配列になっている。

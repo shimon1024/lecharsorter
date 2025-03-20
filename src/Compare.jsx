@@ -18,7 +18,6 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
     setSortHistory(newSortHistory);
     const newStep = newSortHistory.steps[newSortHistory.currentStep];
     // TODO minutes, nCompares
-    // TODO endやっぱよくないかも。他の多くの値が無効なので。やっぱ終了フラグがいいかな。
     if (newStep.sortState === 'end') {
       setScene(
         <Result
