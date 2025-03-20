@@ -76,7 +76,7 @@ describe('キャラソートのタイトル入力', () => {
   });
 });
 
-describe('ランキング人数の選択', () => {
+describe('順位の数の選択', () => {
   test('選択せずデフォルト値に従う', async () => {
     const user = userEvent.setup();
     render(
@@ -107,7 +107,7 @@ describe('ランキング人数の選択', () => {
     ['10', 10],
     ['20', 20],
     [String(le.charAll.length), le.charAll.length],
-  ])('値%sの項目を選択すると、比較画面コンポーネントのランキング人数引数に%dが渡される', async (
+  ])('値%sの項目を選択すると、比較画面コンポーネントの順位の数引数に%dが渡される', async (
     selectNumRankChars,
     argNumRankChars
   ) => {
@@ -118,7 +118,7 @@ describe('ランキング人数の選択', () => {
       </SceneProvider>
     );
 
-    const selectRank = within(screen.getByText('ランキング人数')).getByRole('combobox');
+    const selectRank = within(screen.getByText('順位の数')).getByRole('combobox');
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
     userEvent.selectOptions(selectRank, selectNumRankChars);
     await user.click(screen.getByText('はじめる'));

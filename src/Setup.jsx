@@ -99,7 +99,7 @@ export default function Setup() {
       </div>
 
       <span className="setup-numranks-container">
-        ランキング人数
+        順位の数
         <select
           className="setup-numranks"
           value={String(numRanks)}
