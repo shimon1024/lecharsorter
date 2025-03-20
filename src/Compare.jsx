@@ -17,14 +17,14 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
     const newSortHistory = sorter.reduceSortHistory(sortHistory, action);
     setSortHistory(newSortHistory);
     const newStep = newSortHistory.steps[newSortHistory.currentStep];
-    // TODO minutes, nCompares
+    // TODO 自動保存。IndexedDB?redo後の選択に伴う履歴の廃棄に対応することを忘れずに。
+    // TODO n%完了、残り最大n組->n%完了だけでいいかも
     if (newStep.sortState === 'end') {
       setScene(
         <Result
           sorterTitle={sorterTitle}
           chars={newStep.ranking}
-          minutes={null}
-          nCompares={null}
+          nCompares={newSortHistory.steps.length - 1}
         />
       );
     }
@@ -66,7 +66,7 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
       >
         ↷
       </button>
-      <div className="compare-info">(n組目、n%完了、残り最大n組)</div>
+      <div className="compare-info">({sortHistory.steps.length}組目、n%完了、残り最大n組)</div>
       <button className="compare-quit">キャラソートをやめる</button>
     </div>
   );

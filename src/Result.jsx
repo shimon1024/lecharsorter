@@ -9,7 +9,7 @@ import * as encoding from './encoding.js';
 const sorterURLBase = 'https://example.com/';
 const xPostURLBase = 'https://x.com/intent/post';
 
-export default function Result({ sorterTitle, chars, minutes, nCompares }) {
+export default function Result({ sorterTitle, chars, nCompares }) {
   const setScene = useContext(SceneSetContext);
 
   const ranking = [];
@@ -36,12 +36,6 @@ export default function Result({ sorterTitle, chars, minutes, nCompares }) {
 連縁キャラソート${sorterTitle}ランキング
 ${xRanking}…`);
 
-  // 数値の表現はロケール依存なので、アメリカ英語固定で出力を制御
-  const minutesString = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 1,
-  }).format(minutes);
-
   function handleRetryClick() {
     if (!confirm('結果はサーバーに保存されません。事前にスクリーンショットや結果へのリンクを控えてください。もう一度キャラソートしますか？')) {
       return;
@@ -67,11 +61,7 @@ ${xRanking}…`);
       <div className="result-info" data-testid="result-info">
         {
           (() => {
-            if (minutes != null && nCompares != null) {
-              return `(${minutesString}分、${nCompares}回)`;
-            } else if (minutes != null) {
-              return `(${minutesString}分)`;
-            } else if (nCompares != null) {
+            if (nCompares != null) {
               return `(${nCompares}回)`;
             }
           })()

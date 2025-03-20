@@ -59,19 +59,15 @@ describe('ランキング', () => {
 
 describe('諸情報', () => {
   test.each([
-    [undefined, undefined, ''], // 引数に渡さない
-    [5, 100, '(5分、100回)'], // どちらも渡す
-    [5, undefined, '(5分)'], // 時間だけ
-    [undefined, 100, '(100回)'], // 比較回数だけ
-    [5.5, 100, '(5.5分、100回)'], // 小数
+    [undefined, ''], // 引数に渡さない
+    [100, '(100回)'], // 引数に渡す
   ])('時間%f分、比較回数%d回 -> %s', async (
-    minutes,
     nCompares,
     infoString
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} minutes={minutes} nCompares={nCompares} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} nCompares={nCompares} />}>
         <Scene />
       </SceneProvider>
     );
