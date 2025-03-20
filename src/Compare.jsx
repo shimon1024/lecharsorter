@@ -1,4 +1,4 @@
-import { useReducer, useContext } from 'react';
+import { useContext, useState } from 'react';
 import Result from './Result.jsx';
 import './Compare.css';
 import { SceneSetContext } from './SceneContext.jsx';
@@ -6,27 +6,29 @@ import * as le from './lenen.js'
 import * as sorter from './sorter.js';
 
 export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) {
-  const [sortHistory, dispatchSortHistory] = useReducer(
-    sorter.reduceSortHistory,
-    { charIdSet, numRanks, randSeed },
-    sorter.newSortHistory
-  );
+  const [sortHistory, setSortHistory] = useState(() => sorter.newSortHistory({ charIdSet, numRanks, randSeed }));
   const setScene = useContext(SceneSetContext);
 
-  const { heaptree, ai, bi, aj, bj, sortState } = sortHistory.steps[sortHistory.currentStep];
+  const { heaptree, ai, bi, aj, bj, sortState, ranking } = sortHistory.steps[sortHistory.currentStep];
   const aId = heaptree[ai][aj];
   const bId = heaptree[bi][bj];
 
-  // TODO minutes, nCompares
-  if (sortState === 'end') {
-    setScene(
-      <Result
-        sorterTitle={sorterTitle}
-        chars={heaptree}
-        minutes={null}
-        nCompares={null}
-      />
-    );
+  function handleClick(action) {
+    const newSortHistory = sorter.reduceSortHistory(sortHistory, action);
+    setSortHistory(newSortHistory);
+    const newStep = newSortHistory.steps[newSortHistory.currentStep];
+    // TODO minutes, nCompares
+    // TODO endやっぱよくないかも。他の多くの値が無効なので。やっぱ終了フラグがいいかな。
+    if (newStep.sortState === 'end') {
+      setScene(
+        <Result
+          sorterTitle={sorterTitle}
+          chars={newStep.ranking}
+          minutes={null}
+          nCompares={null}
+        />
+      );
+    }
   }
 
   return (
@@ -35,33 +37,33 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
       <div className="compare-main">
         <button
           className="compare-char1"
-          onClick={() => {dispatchSortHistory({type: 'compare', result: 'a'})}}
+          onClick={() => {handleClick({ type: 'compare', result: 'a' })}}
         >
           {le.chars[aId].name}
         </button>
         <button
           className="compare-char2"
-          onClick={() => {dispatchSortHistory({type: 'compare', result: 'b'})}}
+          onClick={() => {handleClick({ type: 'compare', result: 'b' })}}
         >
           {le.chars[bId].name}
         </button>
       </div>
       <button
         className="compare-both"
-        onClick={() => {dispatchSortHistory({type: 'compare', result: 'both'})}}
+        onClick={() => {handleClick({ type: 'compare', result: 'both' })}}
       >
         どちらも
       </button>
       <hr className="compare-hr-main-sub" />
       <button
         className="compare-undo"
-        onClick={() => {dispatchSortHistory({type: 'undo'})}}
+        onClick={() => {handleClick({ type: 'undo' })}}
       >
         ↶
       </button>
       <button
         className="compare-redo"
-        onClick={() => {dispatchSortHistory({type: 'redo'})}}
+        onClick={() => {handleClick({type: 'redo'})}}
       >
         ↷
       </button>

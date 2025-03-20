@@ -56,7 +56,7 @@ function rightChildIndex(index) {
 
 // compareResult: 'a', 'b', 'both', (null for newSortHistory)
 // 順位が高い(小さい)方が小さいとする昇順にソートする。
-export function heapsort(sortHistory, compareResult) {
+function heapsort(sortHistory, compareResult) {
   let { heaptree, start, ai, bi, aj, bj, ranking, sortState, root, child, recursiveSiftdownStack, randState } =
       structuredClone(sortHistory.steps[sortHistory.currentStep]);
 
