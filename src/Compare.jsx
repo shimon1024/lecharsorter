@@ -45,19 +45,13 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
         >
           {le.chars[bId].name}
         </button>
-        <button
-          className="compare-both"
-          onClick={() => {dispatchSortHistory({type: 'compare', result: 'both'})}}
-        >
-          両方
-        </button>
-        <button
-          className="compare-skip"
-          onClick={() => {dispatchSortHistory({type: 'compare', result: 'skip'})}}
-        >
-          あとまわし
-        </button>
       </div>
+      <button
+        className="compare-both"
+        onClick={() => {dispatchSortHistory({type: 'compare', result: 'both'})}}
+      >
+        どちらも
+      </button>
       <hr className="compare-hr-main-sub" />
       <button className="compare-undo">↶</button>
       <button className="compare-redo">↷</button>
