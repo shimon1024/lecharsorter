@@ -50,7 +50,7 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
         <Result
           sorterTitle={sorterTitle}
           chars={newStep.ranking}
-          nCompares={newSortHistory.steps.length - 1}
+          nCompares={newSortHistory.currentStep}
         />
       );
     }
