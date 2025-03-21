@@ -62,7 +62,7 @@ ${xRanking}…`);
         {
           (() => {
             if (nCompares != null) {
-              return `(${nCompares}回)`;
+              return `(比較${nCompares}回)`;
             }
           })()
         }

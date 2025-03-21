@@ -60,7 +60,7 @@ describe('ランキング', () => {
 describe('諸情報', () => {
   test.each([
     [undefined, ''], // 引数に渡さない
-    [100, '(100回)'], // 引数に渡す
+    [100, '(比較100回)'], // 引数に渡す
   ])('時間%f分、比較回数%d回 -> %s', async (
     nCompares,
     infoString
