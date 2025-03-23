@@ -91,7 +91,7 @@ describe('順位の数の選択', () => {
     await screen.findByRole('heading', { level: 1 });
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set(le.charIdAll),
+        charIdSet: new Set(le.charIdsAll),
         numRanks: 10,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
@@ -106,7 +106,7 @@ describe('順位の数の選択', () => {
     ['5', 5],
     ['10', 10],
     ['20', 20],
-    [String(le.charAll.length), le.charAll.length],
+    [String(le.charIdsAll.length), le.charIdsAll.length],
   ])('値%sの項目を選択すると、比較画面コンポーネントの順位の数引数に%dが渡される', async (
     selectNumRankChars,
     argNumRankChars
@@ -126,7 +126,7 @@ describe('順位の数の選択', () => {
     await screen.findByRole('heading', { level: 1 });
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set(le.charIdAll),
+        charIdSet: new Set(le.charIdsAll),
         numRanks: argNumRankChars,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
@@ -141,14 +141,14 @@ describe('キャラ/グループの選択', () => {
     // 何もしない
     [
       [],
-      le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]),
-      le.worksDefault.flatMap(w => w.chars.map(c => c.id)),
+      le.workIdsDefault.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]),
+      le.workIdsDefault.flatMap(w => le.works[w].chars),
     ],
     // (部分選択->)全選択
     [
       ['全員'],
-      ['全員', ...le.workAll.flatMap(w => [w.name, ...(w.chars.map(c => c.name))])],
-      le.charIdAll,
+      ['全員', ...le.workIdsAll.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))])],
+      le.charIdsAll,
     ],
     /* TODO: 「はじめる」クリック時にポップアップを出して開始させないようにするべき。この入力をCompareは想定していないため、エラーになる
     // 全選択->全解除
@@ -161,56 +161,56 @@ describe('キャラ/グループの選択', () => {
     // 全選択->部分選択->全選択
     [
       ['全員', '鳳聯藪雨', '全員'],
-      ['全員', ...le.workAll.flatMap(w => [w.name, ...(w.chars.map(c => c.name))])],
-      le.charIdAll,
+      ['全員', ...le.workIdsAll.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))])],
+      le.charIdsAll,
     ],
     // 全解除->部分選択->全選択
     [
       ['全員', '全員', '鳳聯藪雨', '全員'],
-      ['全員', ...le.workAll.flatMap(w => [w.name, ...(w.chars.map(c => c.name))])],
-      le.charIdAll,
+      ['全員', ...le.workIdsAll.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))])],
+      le.charIdsAll,
     ],
     // 作品解除
     [
       ['主要人物'],
-      [le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => [w.name, ...(w.chars.map(c => c.name))]),
-      [le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => w.chars.map(c => c.id)),
+      [le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]),
+      [le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => le.works[w].chars),
     ],
     // 作品選択
     [
       ['音楽CD'],
-      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
-      [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.workIdsDefault.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]))],
+      [le.haru, le.hoojiro, ...(le.workIdsDefault.flatMap(w => le.works[w].chars))],
     ],
     // 作品解除->部分選択->作品選択
     [
       ['音楽CD', '音楽CD', 'ハル', '音楽CD'],
-      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
-      [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.workIdsDefault.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]))],
+      [le.haru, le.hoojiro, ...(le.workIdsDefault.flatMap(w => le.works[w].chars))],
     ],
     // 部分選択->作品選択
     [
       ['ハル', '音楽CD'],
-      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
-      [le.haru.id, le.hoojiro.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+      ['音楽CD', 'ハル', '鵐頬告鳥', ...(le.workIdsDefault.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]))],
+      [le.haru, le.hoojiro, ...(le.workIdsDefault.flatMap(w => le.works[w].chars))],
     ],
     // キャラ解除
     [
       ['鳳聯藪雨'],
-      ['燕楽玄鳥', '國主雀巳', ...([le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
-      [le.tsubakura.id, le.suzumi.id, ...([le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => w.chars.map(c => c.id)))],
+      ['燕楽玄鳥', '國主雀巳', ...([le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]))],
+      [le.tsubakura, le.suzumi, ...([le.ee, le.ems, le.rmi, le.bpohc].flatMap(w => le.works[w].chars))],
     ],
     // キャラ選択
     [
       ['ハル'],
-      ['ハル', ...(le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]))],
-      [le.haru.id, ...(le.worksDefault.flatMap(w => w.chars.map(c => c.id)))],
+      ['ハル', ...(le.workIdsDefault.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]))],
+      [le.haru, ...(le.workIdsDefault.flatMap(w => le.works[w].chars))],
     ],
     // キャラ選択->キャラ解除
     [
       ['ハル', 'ハル'],
-      le.worksDefault.flatMap(w => [w.name, ...(w.chars.map(c => c.name))]),
-      le.worksDefault.flatMap(w => w.chars.map(c => c.id)),
+      le.workIdsDefault.flatMap(w => [le.works[w].name, ...(le.works[w].chars.map(c => le.chars[c].name))]),
+      le.workIdsDefault.flatMap(w => le.works[w].chars),
     ],
   ])('%jにチェックすると%jにチェックが入り、%jが比較画面に渡される', async (
     selectingCheckBoxes,

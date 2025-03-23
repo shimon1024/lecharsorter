@@ -9,7 +9,7 @@ import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 
-const charIdSet = new Set([le.hoojiro.id, le.kuroji.id, le.hooaka.id, le.aoji.id]);
+const charIdSet = new Set([le.hoojiro, le.kuroji, le.hooaka, le.aoji]);
 
 vi.mock('./Setup.jsx', { spy: true });
 afterEach(() => {

@@ -9,21 +9,21 @@ afterEach(() => {
   randSeed++;
 });
 
-const chars2 = new Set([le.yabusame.id, le.tsubakura.id]); // 最小キャラ数
-const chars3 = new Set([le.haiji.id, le.saragimaru.id, le.kaoru.id]); // 最小三つ組
-const chars7 = new Set([le.tsubakura.id, le.lumen.id, le.medias.id, le.yago.id, le.hooaka.id, le.sukune.id, le.shion.id]); // デバッグに丁度いい大きさ
+const chars2 = new Set([le.yabusame, le.tsubakura]); // 最小キャラ数
+const chars3 = new Set([le.haiji, le.saragimaru, le.kaoru]); // 最小三つ組
+const chars7 = new Set([le.tsubakura, le.lumen, le.medias, le.yago, le.hooaka, le.sukune, le.shion]); // デバッグに丁度いい大きさ
 const chars10s = [
-  new Set([le.mitori.id, le.hamee.id, le.para.id, le.yaorochi.id]),
-  new Set([le.mitsumo.id]),
-  new Set([le.shou.id, le.tsurubami.id, le.jinbei.id, le.kunimitsu.id]),
-  new Set([le.aoji.id]),
+  new Set([le.mitori, le.hamee, le.para, le.yaorochi]),
+  new Set([le.mitsumo]),
+  new Set([le.shou, le.tsurubami, le.jinbei, le.kunimitsu]),
+  new Set([le.aoji]),
 ];
 const chars10 = chars10s[0].union(chars10s[1]).union(chars10s[2]).union(chars10s[3]); // 同率と単独が入り混じっている
 const chars20s = [
-  new Set([le.hibaru.id, le.chouki.id, le.kuroji.id, le.tsugumi.id, le.nilu.id]),
-  new Set([le.tom.id, le.sese.id, le.suzumi.id, le.ardey.id, le.souko.id]),
-  new Set([le.fumikado.id, le.zelo.id, le.iyozane.id, le.lin.id, le.jun.id]),
-  new Set([le.xenoa.id, le.benny.id, le.sukune.id, le.tenkai.id, le.sanra.id]),
+  new Set([le.hibaru, le.chouki, le.kuroji, le.tsugumi, le.nilu]),
+  new Set([le.tom, le.sese, le.suzumi, le.ardey, le.souko]),
+  new Set([le.fumikado, le.zelo, le.iyozane, le.lin, le.jun]),
+  new Set([le.xenoa, le.benny, le.sukune, le.tenkai, le.sanra]),
 ];
 let chars20; // 順位が入り混じってる
 {
@@ -36,7 +36,7 @@ let chars20; // 順位が入り混じってる
   chars20 = new Set(cs[0].flatMap((c, i) => [c, cs[1][i], cs[2][i], cs[3][i]]));
 }
 
-const charsAll = new Set(le.charIdAll);
+const charsAll = new Set(le.charIdsAll);
 
 function setToSortedArray(set) {
   return Array.from(set).toSorted((a, b) => a - b);
@@ -102,8 +102,8 @@ describe('reduceSortHistory (compare) / heapsort', () => {
 
     while (sortHistory.steps[sortHistory.currentStep].sortState !== 'end') {
       const step = sortHistory.steps[sortHistory.currentStep];
-      const aId = le.chars[step.heaptree[step.ai][step.aj]].id;
-      const bId = le.chars[step.heaptree[step.bi][step.bj]].id;
+      const aId = step.heaptree[step.ai][step.aj];
+      const bId = step.heaptree[step.bi][step.bj];
       const cmp = compareChars(expectedChars, aId, bId);
       sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both'});
     }
@@ -139,8 +139,8 @@ describe('reduceSortHistory (compare) / heapsort', () => {
 
     while (sortHistory.steps[sortHistory.currentStep].sortState !== 'end') {
       const step = sortHistory.steps[sortHistory.currentStep];
-      const aId = le.chars[step.heaptree[step.ai][step.aj]].id;
-      const bId = le.chars[step.heaptree[step.bi][step.bj]].id;
+      const aId = step.heaptree[step.ai][step.aj];
+      const bId = step.heaptree[step.bi][step.bj];
       const cmp = compareChars(expectedCharOrder, aId, bId);
       sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both'});
     }

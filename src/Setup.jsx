@@ -5,7 +5,7 @@ import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 import * as random from './random.js';
 
-function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
+function WorkGroup({ onWorkChange, onCharChange, charIdSet, workId }) {
   return (
     <ul className="workgroup-tree">
       <li>
@@ -14,23 +14,23 @@ function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
             <label>
               <input
                 type="checkbox"
-                checked={charSet.isSupersetOf(new Set(work.chars.map(c => c.id)))}
-                onChange={e => onWorkChange(work, e.target.checked)}
+                checked={charIdSet.isSupersetOf(new Set(le.works[workId].chars))}
+                onChange={e => onWorkChange(workId, e.target.checked)}
               />
-              {work.name}
+              {le.works[workId].name}
             </label>
           </summary>
           <ul>
             {
-              work.chars.map(c =>
-                <li key={c.id}>
+              le.works[workId].chars.map(c =>
+                <li key={c}>
                   <label className="workgroup-char">
                     <input
                       type="checkbox"
-                      checked={charSet.has(c.id)}
+                      checked={charIdSet.has(c)}
                       onChange={e => onCharChange(c, e.target.checked)}
                     />
-                    {c.name}
+                    {le.chars[c].name}
                   </label>
                 </li>
               )
@@ -44,29 +44,29 @@ function WorkGroup({ onWorkChange, onCharChange, charSet, work }) {
 
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
-  const [charSet, setCharSet] = useState(new Set(le.charIdsDefault));
+  const [charIdSet, setCharIdSet] = useState(new Set(le.charIdsDefault));
   const [numRanks, setNumRanks] = useState(10);
   const setScene = useContext(SceneSetContext);
 
   function handleAllChange(checked) {
-    const newCharSet = checked ?
-          new Set(le.charIdAll) :
+    const newCharIdSet = checked ?
+          new Set(le.charIdsAll) :
           new Set();
-    setCharSet(newCharSet);
+    setCharIdSet(newCharIdSet);
   }
 
-  function handleWorkChange(work, checked) {
-    const newCharSet = checked ?
-          charSet.union(new Set(work.chars.map(c => c.id))) :
-          charSet.difference(new Set(work.chars.map(c => c.id)));
-    setCharSet(newCharSet);
+  function handleWorkChange(workId, checked) {
+    const newCharIdSet = checked ?
+          charIdSet.union(new Set(le.works[workId].chars)) :
+          charIdSet.difference(new Set(le.works[workId].chars));
+    setCharIdSet(newCharIdSet);
   }
 
-  function handleCharChange(char_, checked) {
-    const newCharSet = checked ?
-          charSet.union(new Set([char_.id])) :
-          charSet.difference(new Set([char_.id]));
-    setCharSet(newCharSet);
+  function handleCharChange(charId, checked) {
+    const newCharIdSet = checked ?
+          charIdSet.union(new Set([charId])) :
+          charIdSet.difference(new Set([charId]));
+    setCharIdSet(newCharIdSet);
   }
 
   return (
@@ -77,7 +77,7 @@ export default function Setup() {
         <label>
           <input
             type="checkbox"
-            checked={charSet.isSupersetOf(new Set(le.charIdAll))}
+            checked={charIdSet.isSupersetOf(new Set(le.charIdsAll))}
             onChange={e => handleAllChange(e.target.checked)}
           />
           全員
@@ -85,13 +85,13 @@ export default function Setup() {
 
         <div className="setup-chars-workgroup-container">
           {
-            le.workAll.map((w, i) =>
+            le.workIdsAll.map((w, i) =>
               <WorkGroup
                 key={i}
                 onWorkChange={handleWorkChange}
                 onCharChange={handleCharChange}
-                charSet={charSet}
-                work={w}
+                charIdSet={charIdSet}
+                workId={w}
               />
             )
           }
@@ -110,7 +110,7 @@ export default function Setup() {
           <option value="5">5位まで</option>
           <option value="10">10位まで</option>
           <option value="20">20位まで</option>
-          <option value={String(le.charAll.length)}>全員</option>
+          <option value={String(le.charIdsAll.length)}>全員</option>
         </select>
       </span>
 
@@ -131,7 +131,7 @@ export default function Setup() {
         onClick={() =>
           setScene(
             <Compare
-              charIdSet={charSet}
+              charIdSet={charIdSet}
               numRanks={numRanks}
               sorterTitle={sorterTitle}
               randSeed={random.genSeed()}
