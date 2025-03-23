@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import Setup from './Setup.jsx';
 import Result from './Result.jsx';
 import './Compare.css';
 import { SceneSetContext } from './SceneContext.jsx';
@@ -56,6 +57,14 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
     }
   }
 
+  function handleRetryClick() {
+    if (!confirm('キャラソートの途中経過は破棄されます。キャラソートをやめますか？')) {
+      return;
+    }
+
+    setScene(<Setup />);
+  }
+
   return (
     <div className="compare">
       <h1 className="compare-title">どっちが{sorterTitle}？</h1>
@@ -93,7 +102,12 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
         ↷
       </button>
       <div className="compare-info">({sortHistory.currentStep + 1}組目、{progressPercent}%完了)</div>
-      <button className="compare-quit">キャラソートをやめる</button>
+      <button
+        className="compare-quit"
+        onClick={handleRetryClick}
+      >
+        キャラソートをやめる
+      </button>
     </div>
   );
 }
