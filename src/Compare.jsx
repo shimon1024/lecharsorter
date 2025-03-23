@@ -97,11 +97,11 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
       </button>
       <button
         className="compare-redo"
-        onClick={() => {handleClick({type: 'redo'})}}
+        onClick={() => {handleClick({ type: 'redo' })}}
       >
         ↷
       </button>
-      <div className="compare-info">({sortHistory.currentStep + 1}組目、{progressPercent}%完了)</div>
+      <div className="compare-info">{`(${sortHistory.currentStep + 1}組目、${progressPercent}%完了)`}</div>
       <button
         className="compare-quit"
         onClick={handleRetryClick}
