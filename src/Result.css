@@ -49,6 +49,18 @@
   margin: 1.5em 0;
 }
 
+.result-download-image {
+  all: unset;
+  font-weight: 500;
+  color: limegreen;
+}
+.result-download-image:hover,
+.result-download-image:active {
+  all: unset;
+  cursor: pointer;
+  color: color-mix(in srgb, limegreen 90%, white);
+}
+
 .result-result-link {
   margin-top: 0.25rem;
 }

@@ -1,4 +1,5 @@
 import { Fragment, useContext } from 'react';
+import html2canvas from 'html2canvas';
 import './Result.css';
 import Setup from './Setup.jsx';
 import { SceneSetContext } from './SceneContext.jsx';
@@ -44,11 +45,26 @@ ${xRanking}…`);
     setScene(<Setup />);
   }
 
+  async function handleDownloadImage() {
+    const rankingCanvas = await html2canvas(document.getElementById('ranking'));
+    const downloadTempLink = document.createElement('a');
+    downloadTempLink.href =  rankingCanvas.toDataURL();
+    downloadTempLink.download = 'ranking.png';
+    downloadTempLink.style.display = 'none';
+
+    document.body.appendChild(downloadTempLink);
+    try {
+      downloadTempLink.click();
+    } finally {
+      document.body.removeChild(downloadTempLink);
+    }
+  }
+
   return (
     <div className="result">
       <h1 className="result-title">連縁キャラソート</h1>
       <h2 className="result-subtitle">{sorterTitle}ランキング</h2>
-      <div className="result-chars-container" data-testid="result-chars-container">
+      <div id="ranking" className="result-chars-container" data-testid="result-chars-container">
         {
           ranking.map((r, i) =>
             <Fragment key={i}>
@@ -68,6 +84,7 @@ ${xRanking}…`);
         }
       </div>
       <hr className="result-hr-main-sub" />
+      <button className="result-download-image" onClick={handleDownloadImage}>画像をダウンロード</button>
       <a href={xPostURL.toString()} target="_blank">Xで共有</a>
       <a className="result-result-link" href={viewerURL.toString()} target="_blank">結果へのリンク</a>
       <button className="result-retry" onClick={handleRetryClick}>もう一度</button>
