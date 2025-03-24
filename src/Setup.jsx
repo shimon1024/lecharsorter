@@ -128,7 +128,12 @@ export default function Setup() {
 
       <button
         className="setup-start"
-        onClick={() =>
+        onClick={() => {
+          if (charIdSet.size < 2) {
+            alert('キャラクターを2人以上選択してください。');
+            return;
+          }
+
           setScene(
             <Compare
               charIdSet={charIdSet}
@@ -136,8 +141,8 @@ export default function Setup() {
               sorterTitle={sorterTitle}
               randSeed={random.genSeed()}
             />
-          )
-        }
+          );
+        }}
       >
         はじめる
       </button>

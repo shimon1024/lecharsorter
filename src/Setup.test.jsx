@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { within } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -251,5 +251,62 @@ describe('キャラ/グループの選択', () => {
       },
       expect.anything()
     );
+  });
+});
+
+describe('キャラソート開始', () => {
+  let alert;
+
+  beforeEach(() => {
+    alert = vi.spyOn(window, 'alert');
+    alert.mockImplementation((msg) => {});
+  });
+
+  afterEach(() => {
+    alert.mockRestore();
+  });
+
+  test.each([
+    [0, []],
+    [1, ['鳳聯藪雨']],
+  ])('キャラを%d人選択', async (
+    _nchars,
+    inputChars
+  ) => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    let clicking = ['全員', '全員'].concat(inputChars);
+    for (const boxName of clicking) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByText('はじめる');
+    expect(alert).toHaveBeenCalledWith('キャラクターを2人以上選択してください。');
+    expect(Compare).not.toHaveBeenCalled();
+  });
+
+  test('キャラを2人選択', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    for (const boxName of ['全員', '全員', '鳳聯藪雨', '燕楽玄鳥']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByRole('heading', { level: 1 });
+    expect(Compare).toHaveBeenCalled();
   });
 });
