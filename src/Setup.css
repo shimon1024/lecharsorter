@@ -54,10 +54,17 @@
 .setup-numranks-container {
   font-size: 1rem;
   margin: 0.25em 0 1em;
+
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.setup-numranks-checkbox {
+  align-self: center;
 }
 
 .setup-numranks {
-  margin-left: 0.25em;
+  width: 3rem;
 }
 
 .setup-sorter-title-container {

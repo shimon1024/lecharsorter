@@ -76,8 +76,8 @@ describe('キャラソートのタイトル入力', () => {
   });
 });
 
-describe('順位の数の選択', () => {
-  test('選択せずデフォルト値に従う', async () => {
+describe('順位の数の指定', () => {
+  test('指定しない(全員)', async () => {
     const user = userEvent.setup();
     render(
       <SceneProvider defaultScene={<Setup />}>
@@ -92,7 +92,7 @@ describe('順位の数の選択', () => {
     expect(Compare).toHaveBeenCalledWith(
       {
         charIdSet: new Set(le.charIdsAll),
-        numRanks: 10,
+        numRanks: le.charIdsAll.length,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
       },
@@ -100,17 +100,7 @@ describe('順位の数の選択', () => {
     );
   });
 
-  test.each([
-    ['1', 1],
-    ['3', 3],
-    ['5', 5],
-    ['10', 10],
-    ['20', 20],
-    [String(le.charIdsAll.length), le.charIdsAll.length],
-  ])('値%sの項目を選択すると、比較画面コンポーネントの順位の数引数に%dが渡される', async (
-    selectNumRankChars,
-    argNumRankChars
-  ) => {
+  test('指定しない(2人)', async () => {
     const user = userEvent.setup();
     render(
       <SceneProvider defaultScene={<Setup />}>
@@ -118,16 +108,71 @@ describe('順位の数の選択', () => {
       </SceneProvider>
     );
 
-    const selectRank = within(screen.getByText('順位の数')).getByRole('combobox');
+    for (const boxName of ['全員', '全員', '闡裡鶴喰', '瑞風天堺']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByRole('heading', { level: 1 });
+    expect(Compare).toHaveBeenCalledWith(
+      {
+        charIdSet: new Set([le.tsurubami, le.tenkai]),
+        numRanks: 2,
+        sorterTitle: 'すき',
+        randSeed: expect.anything(),
+      },
+      expect.anything()
+    );
+  });
+
+  test('指定する', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
-    userEvent.selectOptions(selectRank, selectNumRankChars);
+    const nranks = screen.getByText('順位の数を位までに制限');
+    await user.click(within(nranks).getByRole('checkbox'));
+    await user.type(within(nranks).getByRole('textbox'), '3');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByRole('heading', { level: 1 });
     expect(Compare).toHaveBeenCalledWith(
       {
         charIdSet: new Set(le.charIdsAll),
-        numRanks: argNumRankChars,
+        numRanks: 3,
+        sorterTitle: 'すき',
+        randSeed: expect.anything(),
+      },
+      expect.anything()
+    );
+  });
+
+  test('順位を余分に指定すると自動で丸められる', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    for (const boxName of ['全員', '全員', '闡裡鶴喰', '瑞風天堺']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    const nranks = screen.getByText('順位の数を位までに制限');
+    await user.click(within(nranks).getByRole('checkbox'));
+    await user.type(within(nranks).getByRole('textbox'), '3');
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByRole('heading', { level: 1 });
+    expect(Compare).toHaveBeenCalledWith(
+      {
+        charIdSet: new Set([le.tsurubami, le.tenkai]),
+        numRanks: 2,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
       },
@@ -245,7 +290,7 @@ describe('キャラ/グループの選択', () => {
     expect(Compare).toHaveBeenCalledWith(
       {
         charIdSet: new Set(expectedCharIds),
-        numRanks: 10,
+        numRanks: expectedCharIds.length,
         sorterTitle: 'すき',
         randSeed: expect.anything(),
       },
@@ -288,11 +333,51 @@ describe('キャラソート開始', () => {
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('はじめる');
-    expect(alert).toHaveBeenCalledWith('キャラクターを2人以上選択してください。');
+    expect(alert).toHaveBeenCalledWith('・キャラクターを2人以上選択してください。');
     expect(Compare).not.toHaveBeenCalled();
   });
 
-  test('キャラを2人選択', async () => {
+  test('不正な順位の数を入力', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    const nranks = screen.getByText('順位の数を位までに制限');
+    await user.click(within(nranks).getByRole('checkbox'));
+    await user.type(within(nranks).getByRole('textbox'), '3a');
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByText('はじめる');
+    expect(alert).toHaveBeenCalledWith('・制限する順位には数値を入力してください。');
+    expect(Compare).not.toHaveBeenCalled();
+  });
+
+  test('不適切に設定', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    for (const boxName of ['全員', '全員']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    const nranks = screen.getByText('順位の数を位までに制限');
+    await user.click(within(nranks).getByRole('checkbox'));
+    await user.type(within(nranks).getByRole('textbox'), '3a');
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByText('はじめる');
+    expect(alert).toHaveBeenCalledWith('・キャラクターを2人以上選択してください。\n・制限する順位には数値を入力してください。');
+    expect(Compare).not.toHaveBeenCalled();
+  });
+
+  test('適切に設定', async () => {
     const user = userEvent.setup();
     render(
       <SceneProvider defaultScene={<Setup />}>

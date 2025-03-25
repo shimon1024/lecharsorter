@@ -45,7 +45,8 @@ function WorkGroup({ onWorkChange, onCharChange, charIdSet, workId }) {
 export default function Setup() {
   const [sorterTitle, setSorterTitle] = useState('すき');
   const [charIdSet, setCharIdSet] = useState(new Set(le.charIdsDefault));
-  const [numRanks, setNumRanks] = useState(10);
+  const [numRanks, setNumRanks] = useState('');
+  const [numRanksHasEnabled, setNumRanksHasEnabled] = useState(false);
   const setScene = useContext(SceneSetContext);
 
   function handleAllChange(checked) {
@@ -99,19 +100,22 @@ export default function Setup() {
       </div>
 
       <span className="setup-numranks-container">
-        順位の数
-        <select
+        <input
+          type="checkbox"
+          className="setup-numranks-checkbox"
+          checked={numRanksHasEnabled}
+          onChange={e => setNumRanksHasEnabled(e.target.checked)}
+        />
+        順位の数を
+        <input
+          type="text"
           className="setup-numranks"
-          value={String(numRanks)}
-          onChange={e => setNumRanks(Number(e.target.value))}
-        >
-          <option value="1">1位のみ</option>
-          <option value="3">3位まで</option>
-          <option value="5">5位まで</option>
-          <option value="10">10位まで</option>
-          <option value="20">20位まで</option>
-          <option value={String(le.charIdsAll.length)}>全員</option>
-        </select>
+          maxLength="4"
+          disabled={!numRanksHasEnabled}
+          onChange={e => setNumRanks(e.target.value)}
+          value={numRanks}
+        />
+        位までに制限
       </span>
 
       <span className="setup-sorter-title-container">
@@ -129,15 +133,31 @@ export default function Setup() {
       <button
         className="setup-start"
         onClick={() => {
+          const msgs = [];
+          let numRanksNum = charIdSet.size;
+
           if (charIdSet.size < 2) {
-            alert('キャラクターを2人以上選択してください。');
+            msgs.push('・キャラクターを2人以上選択してください。');
+          }
+
+          if (numRanksHasEnabled) {
+            const nr = Number(numRanks);
+            if (Number.isNaN(nr)) {
+              msgs.push('・制限する順位には数値を入力してください。');
+            } else {
+              numRanksNum = nr;
+            }
+          }
+
+          if (msgs.length !== 0) {
+            alert(msgs.join('\n'));
             return;
           }
 
           setScene(
             <Compare
               charIdSet={charIdSet}
-              numRanks={numRanks}
+              numRanks={Math.min(numRanksNum, charIdSet.size)}
               sorterTitle={sorterTitle}
               randSeed={random.genSeed()}
             />
