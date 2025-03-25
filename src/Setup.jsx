@@ -154,6 +154,7 @@ export default function Setup() {
             return;
           }
 
+          // numRanksをcharIdSet.size以下にしないと、比較画面で正確な進捗率を表示できなくなる。
           setScene(
             <Compare
               charIdSet={charIdSet}
