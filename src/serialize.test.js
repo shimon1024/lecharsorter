@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import * as encoding from './encoding.js';
+import * as serialize from './serialize.js';
 
 describe('encodeResultData', () => {
   test.each([
@@ -16,12 +16,12 @@ describe('encodeResultData', () => {
     inputSorterTitle,
     expectedByteArray
   ) => {
-    const emptyData = encoding.encodeResultData(1, inputCharIds, inputSorterTitle);
+    const emptyData = serialize.encodeResultData(1, inputCharIds, inputSorterTitle);
     expect(emptyData).toEqual(Uint8Array.from(expectedByteArray));
   });
 
   test('不正なバージョン', async () => {
-    expect(() => encoding.encodeResultData(2, [], '')).toThrow(Error);
+    expect(() => serialize.encodeResultData(2, [], '')).toThrow(Error);
   });
 
   // 今回は入力を信用してよいため、他の不正な値のテストはしない

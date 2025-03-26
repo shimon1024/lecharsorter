@@ -5,7 +5,7 @@ import Setup from './Setup.jsx';
 import { SceneSetContext } from './SceneContext.jsx';
 import * as le from './lenen.js';
 import * as b64 from './base64.js';
-import * as encoding from './encoding.js';
+import * as serialize from './serialize.js';
 
 const sorterURLBase = 'https://example.com/';
 const xPostURLBase = 'https://x.com/intent/post';
@@ -28,7 +28,7 @@ export default function Result({ sorterTitle, chars, unranked, nCompares }) {
   const viewerURL = new URL(sorterURLBase); // javascriptスキームインジェクションに注意
   viewerURL.searchParams.set('c', 'v');
   viewerURL.searchParams.set('v', '1');
-  viewerURL.searchParams.set('d', b64.Uint8ArrayToBase64(encoding.encodeResultData(1, chars, sorterTitle), { alphabet: 'base64url' }));
+  viewerURL.searchParams.set('d', b64.Uint8ArrayToBase64(serialize.encodeResultData(1, chars, sorterTitle), { alphabet: 'base64url' }));
 
   const xRanking = ranking.slice(0, 3).map(r => `${r.rank}位 ${le.chars[r.charId].name}\n`).reduce((a, s) => a + s, '');
   const xPostURL = new URL(xPostURLBase); // javascriptスキームインジェクションに注意
