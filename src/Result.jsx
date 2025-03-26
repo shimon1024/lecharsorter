@@ -10,7 +10,7 @@ import * as encoding from './encoding.js';
 const sorterURLBase = 'https://example.com/';
 const xPostURLBase = 'https://x.com/intent/post';
 
-export default function Result({ sorterTitle, chars, nCompares }) {
+export default function Result({ sorterTitle, chars, unranked, nCompares }) {
   const setScene = useContext(SceneSetContext);
 
   const ranking = [];
@@ -71,7 +71,12 @@ ${xRanking}…`);
               <span className="result-chars-rank">{r.rank}位</span>
               <span>{le.chars[r.charId].name}</span>
             </Fragment>
-          )
+          ).concat(unranked.map((c, i) =>
+            <Fragment key={ranking.length + i}>
+              <span className="result-chars-rank">ランク外</span>
+              <span>{le.chars[c].name}</span>
+            </Fragment>
+          ))
         }
       </div>
       <div className="result-info" data-testid="result-info">

@@ -51,6 +51,7 @@ export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) 
         <Result
           sorterTitle={sorterTitle}
           chars={newStep.ranking}
+          unranked={newStep.heaptree.flat().toSorted((a, b) => a - b)}
           nCompares={newSortHistory.currentStep}
         />
       );

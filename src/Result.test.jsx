@@ -25,7 +25,7 @@ describe('キャラソートのタイトル', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle={sorterTitle} chars={[[1]]} />}>
+      <SceneProvider defaultScene={<Result sorterTitle={sorterTitle} chars={[[1]]} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
@@ -37,17 +37,20 @@ describe('キャラソートのタイトル', () => {
 
 describe('ランキング', () => {
   test.each([
-    [[], ''], // 0人
-    [[[le.yabusame]], '1位鳳聯藪雨'], // 1位のみ
-    [[[le.yabusame], [le.kaoru], [le.clause], [le.aoji]], '1位鳳聯藪雨2位柏木薫3位クラウゼ4位鵐蒿雀'], // 4人
-    [[[le.yabusame], [le.kaoru, le.clause], [le.aoji]], '1位鳳聯藪雨2位柏木薫2位クラウゼ4位鵐蒿雀'], // 4人(2位が同率2人)
-  ])('キャラ%j -> ランキング: %s', async (
+    [[], [], ''], // 0人
+    [[[le.yabusame]], [], '1位鳳聯藪雨'], // 1位のみ
+    [[[le.yabusame]], [le.tsubakura], '1位鳳聯藪雨ランク外燕楽玄鳥'], // 1位のみ、ランク外
+    [[[le.yabusame], [le.kaoru], [le.clause], [le.aoji]], [], '1位鳳聯藪雨2位柏木薫3位クラウゼ4位鵐蒿雀'], // 4人
+    [[[le.yabusame], [le.kaoru, le.clause], [le.aoji]], [], '1位鳳聯藪雨2位柏木薫2位クラウゼ4位鵐蒿雀'], // 4人(2位が同率2人)
+    [[[le.yabusame], [le.kaoru, le.clause], [le.aoji]], [le.hamee, le.ardey], '1位鳳聯藪雨2位柏木薫2位クラウゼ4位鵐蒿雀ランク外シネ＝ハマルランク外アルデ'], // 4人(2位が同率2人)、ランク外
+  ])('キャラ%j、ランク外%j -> ランキング: %s', async (
     chars,
+    unranked,
     rankingString
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={chars} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={chars} unranked={unranked} />}>
         <Scene />
       </SceneProvider>
     );
@@ -67,7 +70,7 @@ describe('諸情報', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} nCompares={nCompares} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} unranked={[]} nCompares={nCompares} />}>
         <Scene />
       </SceneProvider>
     );
@@ -91,7 +94,7 @@ describe('リンク', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} chars={inputChars} />}>
+      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} chars={inputChars} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
@@ -114,7 +117,7 @@ describe('リンク', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} chars={inputChars} />}>
+      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} chars={inputChars} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
@@ -141,7 +144,7 @@ describe('もう一度ボタン', () => {
 
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
@@ -156,7 +159,7 @@ describe('もう一度ボタン', () => {
 
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
