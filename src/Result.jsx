@@ -28,7 +28,9 @@ export default function Result({ sorterTitle, chars, unranked, nCompares }) {
   const viewerURL = new URL(sorterURLBase); // javascriptスキームインジェクションに注意
   viewerURL.searchParams.set('c', 'v');
   viewerURL.searchParams.set('v', '1');
-  viewerURL.searchParams.set('d', b64.Uint8ArrayToBase64(serialize.encodeResultData(1, chars, sorterTitle), { alphabet: 'base64url' }));
+  viewerURL.searchParams.set('rn', b64.Uint8ArrayToBase64(serialize.serializeRanking(1, chars), { alphabet: 'base64url' }));
+  viewerURL.searchParams.set('ur', b64.Uint8ArrayToBase64(serialize.serializeUnranked(1, unranked), { alphabet: 'base64url' }));
+  viewerURL.searchParams.set('st', b64.Uint8ArrayToBase64(serialize.serializeSorterTitle(1, sorterTitle), { alphabet: 'base64url' }));
 
   const xRanking = ranking.slice(0, 3).map(r => `${r.rank}位 ${le.chars[r.charId].name}\n`).reduce((a, s) => a + s, '');
   const xPostURL = new URL(xPostURLBase); // javascriptスキームインジェクションに注意
