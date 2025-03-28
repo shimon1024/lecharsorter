@@ -31,14 +31,14 @@ function calcProgress(sortHistory, numRanks) {
   );
 }
 
-export default function Compare({ charIdSet, numRanks, sorterTitle, randSeed }) {
-  const [sortHistory, setSortHistory] = useState(() => sorter.newSortHistory({ charIdSet, numRanks, randSeed }));
+export default function Compare({ sorterTitle, initialSortHistory }) {
+  const [sortHistory, setSortHistory] = useState(initialSortHistory);
   const setScene = useContext(SceneSetContext);
 
   const { heaptree, ai, bi, aj, bj, sortState, ranking } = sortHistory.steps[sortHistory.currentStep];
   const aId = heaptree[ai][aj];
   const bId = heaptree[bi][bj];
-  const progressPercent = Math.floor(calcProgress(sortHistory, numRanks) * 100);
+  const progressPercent = Math.floor(calcProgress(sortHistory, sortHistory.numRanks) * 100);
 
   function handleClick(action) {
     const newSortHistory = sorter.reduceSortHistory(sortHistory, action);

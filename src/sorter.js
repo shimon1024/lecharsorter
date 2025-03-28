@@ -261,7 +261,7 @@ export function reduceSortHistory(sortHistory, action) {
   }
 }
 
-export function newSortHistory({ charIdSet, numRanks, randSeed }) {
+export function newSortHistory(charIdSet, numRanks, randSeed) {
   let randState = random.newState(randSeed);
   let charIds;
   [charIds, randState] = random.shuffle(Array.from(charIdSet), randState);

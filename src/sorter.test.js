@@ -3,10 +3,11 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import * as sorter from './sorter.js';
 import * as le from './lenen.js';
 import * as random from './random.js';
+import * as testutil from './testutil.js';
 
-let randSeed = 0;
-afterEach(() => {
-  randSeed++;
+let randSeed;
+beforeEach(async ({ task }) => {
+  randSeed = await testutil.shortHash(task.id);
 });
 
 const chars2 = new Set([le.yabusame, le.tsubakura]); // 最小キャラ数
@@ -83,11 +84,11 @@ describe('reduceSortHistory (compare) / heapsort', () => {
     [charsAll, 'sorted'],
     [charsAll, 'reversed'],
     [charsAll, 'random'],
-  ])('ソートアルゴリズムとしての検査: キャラ集合: %o、ランキング数: %d、入力に対するソート結果の並び順: %j', async (
+  ])('ソートアルゴリズムとしての検査: キャラ集合: %o、入力に対するソート結果の並び順: %s', async (
     inputCharSet,
     expectedCharOrder
   ) => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: inputCharSet, numRanks: inputCharSet.size, randSeed });
+    let sortHistory = sorter.newSortHistory(inputCharSet, inputCharSet.size, randSeed);
     expect(shuffle).toHaveBeenCalledOnce();
     expect(shuffle.mock.results[0].type).toEqual('return');
 
@@ -96,7 +97,7 @@ describe('reduceSortHistory (compare) / heapsort', () => {
     switch (expectedCharOrder) {
     case 'sorted': expectedChars = shuffle.mock.results[0].value[0].map(c => [c]); break;
     case 'reversed': expectedChars = shuffle.mock.results[0].value[0].toReversed().map(c => [c]); break;
-    case 'random': expectedChars = random.shuffle(Array.from(inputCharSet), random.newState(~(1 << 31) - randSeed))[0].map(c => [c]); break;
+    case 'random': expectedChars = random.shuffle(Array.from(inputCharSet), random.newState((1 << 28) - 1 - randSeed))[0].map(c => [c]); break;
     default: throw new Error(`unexpected expectedCharOrder: ${expectedCharOrder}`);
     }
 
@@ -133,7 +134,7 @@ describe('reduceSortHistory (compare) / heapsort', () => {
     expectedCharOrder,
     expectedRanking,
   ) => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: inputCharSet, numRanks: inputNumRanks, randSeed });
+    let sortHistory = sorter.newSortHistory(inputCharSet, inputNumRanks, randSeed);
     expect(shuffle).toHaveBeenCalledOnce();
     expect(shuffle.mock.results[0].type).toEqual('return');
 
@@ -153,14 +154,14 @@ describe('reduceSortHistory (compare) / heapsort', () => {
 
 describe('reduceSortHistory (undo / redo)', () => {
   test('前のステップが無い状態でundoしても何も起きない', async () => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
     const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
 
     expect(sortHistory2).toEqual(sortHistory);
   });
 
   test('前のステップがある状態でundoすると1つ前に戻る', async () => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
     const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
 
@@ -171,7 +172,7 @@ describe('reduceSortHistory (undo / redo)', () => {
   });
 
   test('undoしてから選択すると、現在のステップ以降のステップがすべて破棄される(undo前と同じ選択肢を選んだ場合)', async () => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
@@ -192,7 +193,7 @@ describe('reduceSortHistory (undo / redo)', () => {
   });
 
   test('undoしてから選択すると、現在のステップ以降のステップがすべて破棄される(undo前と異なる選択肢を選んだ場合)', async () => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
@@ -214,14 +215,14 @@ describe('reduceSortHistory (undo / redo)', () => {
   });
 
   test('後のステップが無い状態でredoしても何も起きない', async () => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
     const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'redo'});
 
     expect(sortHistory2).toEqual(sortHistory);
   });
 
   test('後のステップがある状態でredoすると1つ後に戻る', async () => {
-    let sortHistory = sorter.newSortHistory({ charIdSet: charsAll, numRanks: charsAll.size, randSeed });
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
     const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
 

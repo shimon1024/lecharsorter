@@ -8,6 +8,8 @@ import Scene from './Scene.jsx';
 import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
+import * as sorter from './sorter.js';
+import * as testutil from './testutil.js';
 
 const charIdSet = new Set([le.hoojiro, le.kuroji, le.hooaka, le.aoji]);
 
@@ -17,16 +19,17 @@ afterEach(() => {
 });
 
 describe('キャラ選択、諸情報', () => {
+  // テスト間で再現性を保ちたいため、シード値は0で固定
+
   test('キャラA', async () => {
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >
@@ -45,14 +48,13 @@ describe('キャラ選択、諸情報', () => {
 
   test('キャラB', async () => {
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >
@@ -71,14 +73,13 @@ describe('キャラ選択、諸情報', () => {
 
   test('どちらも', async () => {
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >
@@ -100,14 +101,13 @@ describe('キャラ選択、諸情報', () => {
 describe('操作のやり直し', () => {
   test('undo', async () => {
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >
@@ -128,14 +128,13 @@ describe('操作のやり直し', () => {
 
   test('redo', async () => {
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >
@@ -174,14 +173,13 @@ describe('キャラソートの中断', () => {
     confirm.mockImplementation(() => false);
 
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >
@@ -198,14 +196,13 @@ describe('キャラソートの中断', () => {
     confirm.mockImplementation(() => true);
 
     const user = userEvent.setup();
+    const initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
     render(
       <SceneProvider
         defaultScene={
           <Compare
-            charIdSet={charIdSet}
-            numRanks={charIdSet.size}
             sorterTitle={'すき'}
-            randSeed={0}
+            initialSortHistory={initialSortHistory}
           />
         }
       >

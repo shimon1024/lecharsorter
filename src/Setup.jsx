@@ -4,6 +4,7 @@ import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 import * as random from './random.js';
+import * as sorter from './sorter.js';
 
 function WorkGroup({ onWorkChange, onCharChange, charIdSet, workId }) {
   return (
@@ -155,12 +156,12 @@ export default function Setup() {
           }
 
           // numRanksをcharIdSet.size以下にしないと、比較画面で正確な進捗率を表示できなくなる。
+          const initialSortHistory = sorter.newSortHistory(charIdSet, Math.min(numRanksNum, charIdSet.size), random.genSeed());
+
           setScene(
             <Compare
-              charIdSet={charIdSet}
-              numRanks={Math.min(numRanksNum, charIdSet.size)}
               sorterTitle={sorterTitle}
-              randSeed={random.genSeed()}
+              initialSortHistory={initialSortHistory}
             />
           );
         }}

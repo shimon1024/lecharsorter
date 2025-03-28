@@ -8,10 +8,24 @@ import Scene from './Scene.jsx';
 import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
+import * as random from './random.js';
+import * as sorter from './sorter.js';
+import * as testutil from './testutil.js';
 
 vi.mock('./Compare.jsx', { spy: true });
+vi.mock('./sorter.js', { spy: true });
+let genSeed;
+
+beforeEach(async ({ task }) => {
+  const shortHash = await testutil.shortHash(task.id);
+
+  genSeed = vi.spyOn(random, 'genSeed');
+  genSeed.mockImplementation(() => shortHash);
+});
+
 afterEach(() => {
   vi.clearAllMocks();
+  genSeed.mockRestore();
 });
 
 describe('キャラソートのタイトル入力', () => {
@@ -89,12 +103,14 @@ describe('順位の数の指定', () => {
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByRole('heading', { level: 1 });
+    expect(sorter.newSortHistory).toHaveBeenCalledOnce();
+    expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
+    expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set(le.charIdsAll));
+    expect(sorter.newSortHistory.mock.calls[0][1]).toEqual(le.charIdsAll.length);
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set(le.charIdsAll),
-        numRanks: le.charIdsAll.length,
         sorterTitle: 'すき',
-        randSeed: expect.anything(),
+        initialSortHistory: sorter.newSortHistory.mock.results[0].value,
       },
       expect.anything()
     );
@@ -114,12 +130,14 @@ describe('順位の数の指定', () => {
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByRole('heading', { level: 1 });
+    expect(sorter.newSortHistory).toHaveBeenCalledOnce();
+    expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
+    expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set([le.tsurubami, le.tenkai]));
+    expect(sorter.newSortHistory.mock.calls[0][1]).toEqual(2);
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set([le.tsurubami, le.tenkai]),
-        numRanks: 2,
         sorterTitle: 'すき',
-        randSeed: expect.anything(),
+        initialSortHistory: sorter.newSortHistory.mock.results[0].value,
       },
       expect.anything()
     );
@@ -140,12 +158,14 @@ describe('順位の数の指定', () => {
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByRole('heading', { level: 1 });
+    expect(sorter.newSortHistory).toHaveBeenCalledOnce();
+    expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
+    expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set(le.charIdsAll));
+    expect(sorter.newSortHistory.mock.calls[0][1]).toEqual(3);
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set(le.charIdsAll),
-        numRanks: 3,
         sorterTitle: 'すき',
-        randSeed: expect.anything(),
+        initialSortHistory: sorter.newSortHistory.mock.results[0].value,
       },
       expect.anything()
     );
@@ -169,12 +189,14 @@ describe('順位の数の指定', () => {
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByRole('heading', { level: 1 });
+    expect(sorter.newSortHistory).toHaveBeenCalledOnce();
+    expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
+    expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set([le.tsurubami, le.tenkai]));
+    expect(sorter.newSortHistory.mock.calls[0][1]).toEqual(2);
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set([le.tsurubami, le.tenkai]),
-        numRanks: 2,
         sorterTitle: 'すき',
-        randSeed: expect.anything(),
+        initialSortHistory: sorter.newSortHistory.mock.results[0].value,
       },
       expect.anything()
     );
@@ -287,12 +309,14 @@ describe('キャラ/グループの選択', () => {
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByRole('heading', { level: 1 });
+    expect(sorter.newSortHistory).toHaveBeenCalledOnce();
+    expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
+    expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set(expectedCharIds));
+    expect(sorter.newSortHistory.mock.calls[0][1]).toEqual(expectedCharIds.length);
     expect(Compare).toHaveBeenCalledWith(
       {
-        charIdSet: new Set(expectedCharIds),
-        numRanks: expectedCharIds.length,
         sorterTitle: 'すき',
-        randSeed: expect.anything(),
+        initialSortHistory: sorter.newSortHistory.mock.results[0].value,
       },
       expect.anything()
     );
