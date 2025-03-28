@@ -50,7 +50,7 @@ export default function Compare({ sorterTitle, initialSortHistory }) {
       setScene(
         <Result
           sorterTitle={sorterTitle}
-          chars={newStep.ranking}
+          ranking={newStep.ranking}
           unranked={newStep.heaptree.flat().toSorted((a, b) => a - b)}
           nCompares={newSortHistory.currentStep}
         />

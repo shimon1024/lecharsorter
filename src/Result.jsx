@@ -10,29 +10,29 @@ import * as serialize from './serialize.js';
 const sorterURLBase = 'https://example.com/';
 const xPostURLBase = 'https://x.com/intent/post';
 
-export default function Result({ sorterTitle, chars, unranked, nCompares }) {
+export default function Result({ sorterTitle, ranking, unranked, nCompares }) {
   const setScene = useContext(SceneSetContext);
 
-  const ranking = [];
+  const rankingList = [];
   let rank = 1;
-  for (let i = 0; i < chars.length; i++) {
-    for (let j = 0; j < chars[i].length; j++) {
-      ranking.push({
+  for (let i = 0; i < ranking.length; i++) {
+    for (let j = 0; j < ranking[i].length; j++) {
+      rankingList.push({
         rank,
-        charId: chars[i][j],
+        charId: ranking[i][j],
       });
     }
-    rank += chars[i].length;
+    rank += ranking[i].length;
   }
 
   const viewerURL = new URL(sorterURLBase); // javascriptスキームインジェクションに注意
   viewerURL.searchParams.set('c', 'v');
   viewerURL.searchParams.set('v', '1');
-  viewerURL.searchParams.set('rn', b64.Uint8ArrayToBase64(serialize.serializeRanking(1, chars), { alphabet: 'base64url' }));
+  viewerURL.searchParams.set('rn', b64.Uint8ArrayToBase64(serialize.serializeRanking(1, ranking), { alphabet: 'base64url' }));
   viewerURL.searchParams.set('ur', b64.Uint8ArrayToBase64(serialize.serializeUnranked(1, unranked), { alphabet: 'base64url' }));
   viewerURL.searchParams.set('st', b64.Uint8ArrayToBase64(serialize.serializeSorterTitle(1, sorterTitle), { alphabet: 'base64url' }));
 
-  const xRanking = ranking.slice(0, 3).map(r => `${r.rank}位 ${le.chars[r.charId].name}\n`).reduce((a, s) => a + s, '');
+  const xRanking = rankingList.slice(0, 3).map(r => `${r.rank}位 ${le.chars[r.charId].name}\n`).reduce((a, s) => a + s, '');
   const xPostURL = new URL(xPostURLBase); // javascriptスキームインジェクションに注意
   xPostURL.searchParams.set('url', viewerURL.toString());
   xPostURL.searchParams.set('text', `\
@@ -68,13 +68,13 @@ ${xRanking}…`);
       <h2 className="result-subtitle">{sorterTitle}ランキング</h2>
       <div id="ranking" className="result-chars-container" data-testid="result-chars-container">
         {
-          ranking.map((r, i) =>
+          rankingList.map((r, i) =>
             <Fragment key={i}>
               <span className="result-chars-rank">{r.rank}位</span>
               <span>{le.chars[r.charId].name}</span>
             </Fragment>
           ).concat(unranked.map((c, i) =>
-            <Fragment key={ranking.length + i}>
+            <Fragment key={rankingList.length + i}>
               <span className="result-chars-rank">ランク外</span>
               <span>{le.chars[c].name}</span>
             </Fragment>

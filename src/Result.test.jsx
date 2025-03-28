@@ -25,7 +25,7 @@ describe('キャラソートのタイトル', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle={sorterTitle} chars={[[1]]} unranked={[]} />}>
+      <SceneProvider defaultScene={<Result sorterTitle={sorterTitle} ranking={[[1]]} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
@@ -44,13 +44,13 @@ describe('ランキング', () => {
     [[[le.yabusame], [le.kaoru, le.clause], [le.aoji]], [], '1位鳳聯藪雨2位柏木薫2位クラウゼ4位鵐蒿雀'], // 4人(2位が同率2人)
     [[[le.yabusame], [le.kaoru, le.clause], [le.aoji]], [le.hamee, le.ardey], '1位鳳聯藪雨2位柏木薫2位クラウゼ4位鵐蒿雀ランク外シネ＝ハマルランク外アルデ'], // 4人(2位が同率2人)、ランク外
   ])('キャラ%j、ランク外%j -> ランキング: %s', async (
-    chars,
+    ranking,
     unranked,
     rankingString
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={chars} unranked={unranked} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" ranking={ranking} unranked={unranked} />}>
         <Scene />
       </SceneProvider>
     );
@@ -70,7 +70,7 @@ describe('諸情報', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} unranked={[]} nCompares={nCompares} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" ranking={[[1]]} unranked={[]} nCompares={nCompares} />}>
         <Scene />
       </SceneProvider>
     );
@@ -96,7 +96,7 @@ describe('リンク', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} chars={inputRanking} unranked={inputUnranked} />}>
+      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} ranking={inputRanking} unranked={inputUnranked} />}>
         <Scene />
       </SceneProvider>
     );
@@ -120,7 +120,7 @@ describe('リンク', () => {
   ) => {
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} chars={inputRanking} unranked={inputUnranked} />}>
+      <SceneProvider defaultScene={<Result sorterTitle={inputSorterTitle} ranking={inputRanking} unranked={inputUnranked} />}>
         <Scene />
       </SceneProvider>
     );
@@ -147,7 +147,7 @@ describe('もう一度ボタン', () => {
 
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} unranked={[]} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" ranking={[[1]]} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
@@ -162,7 +162,7 @@ describe('もう一度ボタン', () => {
 
     const user = userEvent.setup();
     render(
-      <SceneProvider defaultScene={<Result sorterTitle="すき" chars={[[1]]} unranked={[]} />}>
+      <SceneProvider defaultScene={<Result sorterTitle="すき" ranking={[[1]]} unranked={[]} />}>
         <Scene />
       </SceneProvider>
     );
