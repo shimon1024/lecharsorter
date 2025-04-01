@@ -106,7 +106,7 @@ describe('reduceSortHistory (compare) / heapsort', () => {
       const aId = step.heaptree[step.ai][step.aj];
       const bId = step.heaptree[step.bi][step.bj];
       const cmp = compareChars(expectedChars, aId, bId);
-      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both'});
+      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both' });
     }
 
     expect(sortHistory.steps[sortHistory.currentStep].ranking).toEqual(expectedChars);
@@ -143,10 +143,21 @@ describe('reduceSortHistory (compare) / heapsort', () => {
       const aId = step.heaptree[step.ai][step.aj];
       const bId = step.heaptree[step.bi][step.bj];
       const cmp = compareChars(expectedCharOrder, aId, bId);
-      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both'});
+      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: cmp < 0 ? 'a' : cmp > 0 ? 'b' : 'both' });
     }
 
     expect(sortHistory.steps[sortHistory.currentStep].ranking).toEqual(expectedRanking);
+  });
+
+  test('end状態のsort historyを渡すと何もしない', async () => {
+    let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
+
+    while (sortHistory.steps[sortHistory.currentStep].sortState !== 'end') {
+      sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    }
+
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    expect(sortHistory2).toEqual(sortHistory);
   });
 
   // 今回は入力を信頼していいため、異常ケースのテストは省く
@@ -155,17 +166,16 @@ describe('reduceSortHistory (compare) / heapsort', () => {
 describe('reduceSortHistory (undo / redo)', () => {
   test('前のステップが無い状態でundoしても何も起きない', async () => {
     let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
-    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo' });
 
     expect(sortHistory2).toEqual(sortHistory);
   });
 
   test('前のステップがある状態でundoすると1つ前に戻る', async () => {
     let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo' });
 
-    expect(sortHistory2.version).toEqual(sortHistory.version);
     expect(sortHistory2.numRanks).toEqual(sortHistory.numRanks);
     expect(sortHistory2.steps).toEqual(sortHistory.steps);
     expect(sortHistory2.currentStep).toEqual(sortHistory.currentStep - 1);
@@ -173,15 +183,14 @@ describe('reduceSortHistory (undo / redo)', () => {
 
   test('undoしてから選択すると、現在のステップ以降のステップがすべて破棄される(undo前と同じ選択肢を選んだ場合)', async () => {
     let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo' });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo' });
     const bkSortHistory = structuredClone(sortHistory);
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
 
-    expect(sortHistory.version).toEqual(bkSortHistory.version);
     expect(sortHistory.numRanks).toEqual(bkSortHistory.numRanks);
 
     expect(bkSortHistory.steps.length).toEqual(4);
@@ -194,15 +203,14 @@ describe('reduceSortHistory (undo / redo)', () => {
 
   test('undoしてから選択すると、現在のステップ以降のステップがすべて破棄される(undo前と異なる選択肢を選んだ場合)', async () => {
     let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
     sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
     const bkSortHistory = structuredClone(sortHistory);
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'b'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'b' });
 
-    expect(sortHistory.version).toEqual(bkSortHistory.version);
     expect(sortHistory.numRanks).toEqual(bkSortHistory.numRanks);
 
     expect(bkSortHistory.steps.length).toEqual(4);
@@ -216,24 +224,22 @@ describe('reduceSortHistory (undo / redo)', () => {
 
   test('後のステップが無い状態でredoしても何も起きない', async () => {
     let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
-    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'redo'});
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'redo' });
 
     expect(sortHistory2).toEqual(sortHistory);
   });
 
   test('後のステップがある状態でredoすると1つ後に戻る', async () => {
     let sortHistory = sorter.newSortHistory(charsAll, charsAll.size, randSeed);
-    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a'});
-    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo'});
+    sortHistory = sorter.reduceSortHistory(sortHistory, { type: 'compare', result: 'a' });
+    const sortHistory2 = sorter.reduceSortHistory(sortHistory, { type: 'undo' });
 
-    expect(sortHistory2.version).toEqual(sortHistory.version);
     expect(sortHistory2.numRanks).toEqual(sortHistory.numRanks);
     expect(sortHistory2.steps).toEqual(sortHistory.steps);
     expect(sortHistory2.currentStep).toEqual(sortHistory.currentStep - 1);
 
-    const sortHistory3 = sorter.reduceSortHistory(sortHistory, { type: 'redo'});
+    const sortHistory3 = sorter.reduceSortHistory(sortHistory, { type: 'redo' });
 
-    expect(sortHistory3.version).toEqual(sortHistory2.version);
     expect(sortHistory3.numRanks).toEqual(sortHistory2.numRanks);
     expect(sortHistory3.steps).toEqual(sortHistory2.steps);
     expect(sortHistory3.currentStep).toEqual(sortHistory2.currentStep + 1);

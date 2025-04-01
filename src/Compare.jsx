@@ -1,10 +1,12 @@
 import { useContext, useState } from 'react';
 import Setup from './Setup.jsx';
 import Result from './Result.jsx';
+import ErrorPage, { messageClearSaveData } from './ErrorPage.jsx';
 import './Compare.css';
 import { SceneSetContext } from './SceneContext.jsx';
 import * as le from './lenen.js'
 import * as sorter from './sorter.js';
+import * as save from './save.js';
 
 function calcProgress(sortHistory, numRanks) {
   // ゴールがヒープ木が空になるかランキングが必要分集まるかの2種類あって、どちらかを達成すればいいと考える。
@@ -31,20 +33,29 @@ function calcProgress(sortHistory, numRanks) {
   );
 }
 
-export default function Compare({ sorterTitle, initialSortHistory }) {
+// 通常起こらないが、initialSortHistory.steps.at(-1).sortStateが'end'のときに呼び出した場合、表示されるキャラは空白になり、
+// いずれかの比較ボタンを押すと結果画面が表示される。
+export default function Compare({ sorterTitle, initialSortHistory, initialAutosaveIsEnabled }) {
   const [sortHistory, setSortHistory] = useState(initialSortHistory);
+  const [autosaveIsEnabled, setAutosaveIsEnabled] = useState(initialAutosaveIsEnabled);
   const setScene = useContext(SceneSetContext);
 
   const { heaptree, ai, bi, aj, bj, sortState, ranking } = sortHistory.steps[sortHistory.currentStep];
-  const aId = heaptree[ai][aj];
-  const bId = heaptree[bi][bj];
   const progressPercent = Math.floor(calcProgress(sortHistory, sortHistory.numRanks) * 100);
 
-  function handleClick(action) {
+  async function handleClick(action) {
     const newSortHistory = sorter.reduceSortHistory(sortHistory, action);
     setSortHistory(newSortHistory);
     const newStep = newSortHistory.steps[newSortHistory.currentStep];
-    // TODO 自動保存。IndexedDB?redo後の選択に伴う履歴の廃棄に対応することを忘れずに。
+
+    if (autosaveIsEnabled) {
+      try {
+        await save.saveSaveData(sorterTitle, newSortHistory, action.type);
+      } catch (e) {
+        console.error(`Compare: handleClick: autosave error: ${e}`);
+        setAutosaveIsEnabled(false);
+      }
+    }
 
     if (newStep.sortState === 'end') {
       setScene(
@@ -58,8 +69,16 @@ export default function Compare({ sorterTitle, initialSortHistory }) {
     }
   }
 
-  function handleRetryClick() {
-    if (!confirm('キャラソートの途中経過は破棄されます。キャラソートをやめますか？')) {
+  async function handleRetryClick() {
+    if (!confirm('キャラソートの保存された途中経過は破棄されます。キャラソートをやめますか？')) {
+      return;
+    }
+
+    try {
+      await save.clearSaveData();
+    } catch (e) {
+      console.error(`Compare: handleRetryClick: clear save error: ${e}`);
+      setScene(<ErrorPage message={messageClearSaveData} />);
       return;
     }
 
@@ -72,37 +91,40 @@ export default function Compare({ sorterTitle, initialSortHistory }) {
       <div className="compare-main">
         <button
           className="compare-char1"
-          onClick={() => {handleClick({ type: 'compare', result: 'a' })}}
+          data-testid="compare-char1"
+          onClick={async () => handleClick({ type: 'compare', result: 'a' })}
         >
-          {le.chars[aId].name}
+          {sortState !== 'end' && le.chars[heaptree[ai][aj]].name}
         </button>
         <button
           className="compare-char2"
-          onClick={() => {handleClick({ type: 'compare', result: 'b' })}}
+          data-testid="compare-char2"
+          onClick={async () => handleClick({ type: 'compare', result: 'b' })}
         >
-          {le.chars[bId].name}
+          {sortState !== 'end' && le.chars[heaptree[bi][bj]].name}
         </button>
       </div>
       <button
         className="compare-both"
-        onClick={() => {handleClick({ type: 'compare', result: 'both' })}}
+        onClick={async () => handleClick({ type: 'compare', result: 'both' })}
       >
         どちらも
       </button>
       <hr className="compare-hr-main-sub" />
       <button
         className="compare-undo"
-        onClick={() => {handleClick({ type: 'undo' })}}
+        onClick={async () => handleClick({ type: 'undo' })}
       >
         ↶
       </button>
       <button
         className="compare-redo"
-        onClick={() => {handleClick({ type: 'redo' })}}
+        onClick={async () => handleClick({ type: 'redo' })}
       >
         ↷
       </button>
       <div className="compare-info">{`(${sortHistory.currentStep + 1}組目、${progressPercent}%完了)`}</div>
+      <div className="compare-autosave">{!autosaveIsEnabled && '進行状態の自動保存に失敗しました。自動保存機能を無効にしてキャラソートを続行します。'}</div>
       <button
         className="compare-quit"
         onClick={handleRetryClick}

@@ -4,6 +4,7 @@ import { SceneSetContext } from './SceneContext.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 import * as random from './random.js';
+import * as save from './save.js';
 import * as sorter from './sorter.js';
 
 function WorkGroup({ onWorkChange, onCharChange, charIdSet, workId }) {
@@ -107,7 +108,7 @@ export default function Setup() {
           checked={numRanksHasEnabled}
           onChange={e => setNumRanksHasEnabled(e.target.checked)}
         />
-        順位の数を
+        ランクインするランクの数を
         <input
           type="text"
           className="setup-numranks"
@@ -116,7 +117,7 @@ export default function Setup() {
           onChange={e => setNumRanks(e.target.value)}
           value={numRanks}
         />
-        位までに制限
+        までに制限
       </span>
 
       <span className="setup-sorter-title-container">
@@ -133,7 +134,9 @@ export default function Setup() {
 
       <button
         className="setup-start"
-        onClick={() => {
+        onClick={async () => {
+          // TODO 別関数に分離
+
           const msgs = [];
           let numRanksNum = charIdSet.size;
 
@@ -144,7 +147,7 @@ export default function Setup() {
           if (numRanksHasEnabled) {
             const nr = Number(numRanks);
             if (Number.isNaN(nr)) {
-              msgs.push('・制限する順位には数値を入力してください。');
+              msgs.push('・ランク数制限には数値を入力してください。');
             } else {
               numRanksNum = nr;
             }
@@ -157,11 +160,21 @@ export default function Setup() {
 
           // numRanksをcharIdSet.size以下にしないと、比較画面で正確な進捗率を表示できなくなる。
           const initialSortHistory = sorter.newSortHistory(charIdSet, Math.min(numRanksNum, charIdSet.size), random.genSeed());
+          let initialAutosaveIsEnabled = true;
+
+          try {
+            await save.clearSaveData();
+            await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
+          } catch (e) {
+            console.error(`Setup: handleStart: autosave error: ${e}`);
+            initialAutosaveIsEnabled = false;
+          }
 
           setScene(
             <Compare
               sorterTitle={sorterTitle}
               initialSortHistory={initialSortHistory}
+              initialAutosaveIsEnabled={initialAutosaveIsEnabled}
             />
           );
         }}

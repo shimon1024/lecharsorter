@@ -23,7 +23,6 @@ import * as random from './random.js';
 //
 // sortHistoryのデータ構造:
 // {
-//   version: Number, // フォーマットバージョン。永続化で使用する可能性がある。
 //   numRanks: Number, // ランキングの順位数
 //   // 各比較のすべての履歴を保持する配列
 //   // stepのsortStateがendの場合、そのstepではheaptreeとrankingとsortState以外の値が不定になることに注意。
@@ -214,6 +213,7 @@ function heapsort(sortHistory, compareResult) {
       sortState = 'pivot';
       continue;
     }
+    case 'end': return sortHistory; // 何もしない
     default: throw new Error(`unknown state: ${sortState}`);
     }
   }
@@ -267,7 +267,6 @@ export function newSortHistory(charIdSet, numRanks, randSeed) {
   [charIds, randState] = random.shuffle(Array.from(charIdSet), randState);
 
   const sortHistory = heapsort({
-    version: 1,
     numRanks,
     steps: [
       {

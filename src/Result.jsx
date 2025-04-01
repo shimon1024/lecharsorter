@@ -2,10 +2,12 @@ import { Fragment, useContext } from 'react';
 import html2canvas from 'html2canvas';
 import './Result.css';
 import Setup from './Setup.jsx';
+import ErrorPage, { messageClearSaveData } from './ErrorPage.jsx';
 import { SceneSetContext } from './SceneContext.jsx';
 import * as le from './lenen.js';
 import * as b64 from './base64.js';
 import * as serialize from './serialize.js';
+import * as save from './save.js';
 
 const sorterURLBase = 'https://example.com/';
 const xPostURLBase = 'https://x.com/intent/post';
@@ -39,8 +41,16 @@ export default function Result({ sorterTitle, ranking, unranked, nCompares }) {
 連縁キャラソート${sorterTitle}ランキング
 ${xRanking}…`);
 
-  function handleRetryClick() {
-    if (!confirm('結果はサーバーに保存されません。事前にスクリーンショットや結果へのリンクを控えてください。もう一度キャラソートしますか？')) {
+  async function handleRetryClick() {
+    if (!confirm('後で結果を見返したい場合は、もう一度キャラソートする前に、結果の画像やリンクを控えてください。もう一度キャラソートしますか？')) {
+      return;
+    }
+
+    try {
+      await save.clearSaveData();
+    } catch (e) {
+      console.error(`Compare: handleRetryClick: clear save error: ${e}`);
+      setScene(<ErrorPage message={messageClearSaveData} />);
       return;
     }
 

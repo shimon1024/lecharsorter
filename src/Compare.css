@@ -96,6 +96,11 @@
   margin: auto;
 }
 
+.compare-autosave {
+  color: red;
+  margin: auto;
+}
+
 .compare-quit {
   justify-self: center;
   margin-top: 1em;

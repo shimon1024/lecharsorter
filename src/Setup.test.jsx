@@ -9,6 +9,7 @@ import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';
 import * as random from './random.js';
+import * as save from './save.js';
 import * as sorter from './sorter.js';
 import * as testutil from './testutil.js';
 
@@ -23,9 +24,10 @@ beforeEach(async ({ task }) => {
   genSeed.mockImplementation(() => shortHash);
 });
 
-afterEach(() => {
+afterEach(async () => {
   vi.clearAllMocks();
   genSeed.mockRestore();
+  await save.clearSaveData();
 });
 
 describe('キャラソートのタイトル入力', () => {
@@ -40,8 +42,7 @@ describe('キャラソートのタイトル入力', () => {
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
     await user.click(screen.getByText('はじめる'));
 
-    const compareSceneHeading = await screen.findByRole('heading', { level: 1 });
-    expect(compareSceneHeading.textContent).toEqual('どっちがすき？');
+    await screen.findByText('どっちがすき？');
   });
 
   test('入力欄を空にする', async () => {
@@ -58,8 +59,7 @@ describe('キャラソートのタイトル入力', () => {
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
     await user.click(screen.getByText('はじめる'));
 
-    const compareSceneHeading = await screen.findByRole('heading', { level: 1 });
-    expect(compareSceneHeading.textContent).toEqual('どっちが？');
+    await screen.findByText('どっちが？');
   });
 
   test.each([
@@ -85,12 +85,11 @@ describe('キャラソートのタイトル入力', () => {
     await user.click(screen.getByText('はじめる'));
 
     const expectedString = 'ぬ'.repeat(expectedLength);
-    const compareSceneHeading = await screen.findByRole('heading', { level: 1 });
-    expect(compareSceneHeading.textContent).toEqual(`どっちが${expectedString}？`);
+    await screen.findByText(`どっちが${expectedString}？`);
   });
 });
 
-describe('順位の数の指定', () => {
+describe('ランク数の指定', () => {
   test('指定しない(全員)', async () => {
     const user = userEvent.setup();
     render(
@@ -102,7 +101,7 @@ describe('順位の数の指定', () => {
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
     await user.click(screen.getByText('はじめる'));
 
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByText('どっちがすき？');
     expect(sorter.newSortHistory).toHaveBeenCalledOnce();
     expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
     expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set(le.charIdsAll));
@@ -111,6 +110,7 @@ describe('順位の数の指定', () => {
       {
         sorterTitle: 'すき',
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
+        initialAutosaveIsEnabled: true,
       },
       expect.anything()
     );
@@ -129,7 +129,7 @@ describe('順位の数の指定', () => {
     }
     await user.click(screen.getByText('はじめる'));
 
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByText('どっちがすき？');
     expect(sorter.newSortHistory).toHaveBeenCalledOnce();
     expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
     expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set([le.tsurubami, le.tenkai]));
@@ -138,6 +138,7 @@ describe('順位の数の指定', () => {
       {
         sorterTitle: 'すき',
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
+        initialAutosaveIsEnabled: true,
       },
       expect.anything()
     );
@@ -152,12 +153,12 @@ describe('順位の数の指定', () => {
     );
 
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
-    const nranks = screen.getByText('順位の数を位までに制限');
+    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
     await user.click(within(nranks).getByRole('checkbox'));
     await user.type(within(nranks).getByRole('textbox'), '3');
     await user.click(screen.getByText('はじめる'));
 
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByText('どっちがすき？');
     expect(sorter.newSortHistory).toHaveBeenCalledOnce();
     expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
     expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set(le.charIdsAll));
@@ -166,12 +167,13 @@ describe('順位の数の指定', () => {
       {
         sorterTitle: 'すき',
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
+        initialAutosaveIsEnabled: true,
       },
       expect.anything()
     );
   });
 
-  test('順位を余分に指定すると自動で丸められる', async () => {
+  test('ランクを余分に指定すると自動で丸められる', async () => {
     const user = userEvent.setup();
     render(
       <SceneProvider defaultScene={<Setup />}>
@@ -183,12 +185,12 @@ describe('順位の数の指定', () => {
       await user.click(screen.getByRole('checkbox', { name: boxName }));
     }
 
-    const nranks = screen.getByText('順位の数を位までに制限');
+    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
     await user.click(within(nranks).getByRole('checkbox'));
     await user.type(within(nranks).getByRole('textbox'), '3');
     await user.click(screen.getByText('はじめる'));
 
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByText('どっちがすき？');
     expect(sorter.newSortHistory).toHaveBeenCalledOnce();
     expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
     expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set([le.tsurubami, le.tenkai]));
@@ -197,6 +199,7 @@ describe('順位の数の指定', () => {
       {
         sorterTitle: 'すき',
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
+        initialAutosaveIsEnabled: true,
       },
       expect.anything()
     );
@@ -308,7 +311,7 @@ describe('キャラ/グループの選択', () => {
 
     await user.click(screen.getByText('はじめる'));
 
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByText('どっちがすき？');
     expect(sorter.newSortHistory).toHaveBeenCalledOnce();
     expect(sorter.newSortHistory.mock.results[0].type).toEqual('return');
     expect(new Set(sorter.newSortHistory.mock.calls[0][0])).toEqual(new Set(expectedCharIds));
@@ -317,6 +320,7 @@ describe('キャラ/グループの選択', () => {
       {
         sorterTitle: 'すき',
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
+        initialAutosaveIsEnabled: true,
       },
       expect.anything()
     );
@@ -324,15 +328,25 @@ describe('キャラ/グループの選択', () => {
 });
 
 describe('キャラソート開始', () => {
-  let alert;
+  let alert, genSeed, saveSaveData, console_error;
 
   beforeEach(() => {
     alert = vi.spyOn(window, 'alert');
     alert.mockImplementation((msg) => {});
+
+    genSeed = vi.spyOn(random, 'genSeed');
+    genSeed.mockImplementation(() => 0);
+
+    saveSaveData = vi.spyOn(save, 'saveSaveData');
+
+    console_error = vi.spyOn(console, 'error');
   });
 
   afterEach(() => {
     alert.mockRestore();
+    genSeed.mockRestore();
+    saveSaveData.mockRestore();
+    console_error.mockRestore();
   });
 
   test.each([
@@ -361,7 +375,7 @@ describe('キャラソート開始', () => {
     expect(Compare).not.toHaveBeenCalled();
   });
 
-  test('不正な順位の数を入力', async () => {
+  test('不正なランク数を入力', async () => {
     const user = userEvent.setup();
     render(
       <SceneProvider defaultScene={<Setup />}>
@@ -369,13 +383,13 @@ describe('キャラソート開始', () => {
       </SceneProvider>
     );
 
-    const nranks = screen.getByText('順位の数を位までに制限');
+    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
     await user.click(within(nranks).getByRole('checkbox'));
     await user.type(within(nranks).getByRole('textbox'), '3a');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('はじめる');
-    expect(alert).toHaveBeenCalledWith('・制限する順位には数値を入力してください。');
+    expect(alert).toHaveBeenCalledWith('・ランク数制限には数値を入力してください。');
     expect(Compare).not.toHaveBeenCalled();
   });
 
@@ -391,13 +405,13 @@ describe('キャラソート開始', () => {
       await user.click(screen.getByRole('checkbox', { name: boxName }));
     }
 
-    const nranks = screen.getByText('順位の数を位までに制限');
+    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
     await user.click(within(nranks).getByRole('checkbox'));
     await user.type(within(nranks).getByRole('textbox'), '3a');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('はじめる');
-    expect(alert).toHaveBeenCalledWith('・キャラクターを2人以上選択してください。\n・制限する順位には数値を入力してください。');
+    expect(alert).toHaveBeenCalledWith('・キャラクターを2人以上選択してください。\n・ランク数制限には数値を入力してください。');
     expect(Compare).not.toHaveBeenCalled();
   });
 
@@ -415,7 +429,72 @@ describe('キャラソート開始', () => {
 
     await user.click(screen.getByText('はじめる'));
 
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByText('どっちがすき？');
     expect(Compare).toHaveBeenCalled();
+  });
+
+  test('初期値がセーブされる', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    for (const boxName of ['全員', '全員', '鳳聯藪雨', '燕楽玄鳥']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByText('どっちがすき？');
+    expect(Compare).toHaveBeenCalledOnce();
+    expect(await save.loadSaveData()).toEqual(['すき', sorter.newSortHistory(new Set([le.yabusame, le.tsubakura]), 2, 0)]);
+  });
+
+  test('前回のセーブデータが残っていてもセーブされる', async () => {
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    const initialSortHistory = sorter.newSortHistory(new Set([le.re, le.zelo, le.lin]), 3, 1);
+    await save.saveSaveData('好き', initialSortHistory, 'compare');
+    expect(await save.loadSaveData()).toEqual(['好き', initialSortHistory]);
+
+    for (const boxName of ['全員', '全員', '鳳聯藪雨', '燕楽玄鳥']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByText('どっちがすき？');
+    expect(Compare).toHaveBeenCalledOnce();
+    expect(await save.loadSaveData()).toEqual(['すき', sorter.newSortHistory(new Set([le.yabusame, le.tsubakura]), 2, 0)]);
+  });
+
+  test('セーブが失敗すると自動保存機能が無効', async () => {
+    saveSaveData.mockImplementation(async () => {throw new Error();});
+    console_error.mockImplementation(() => {}); // 握りつぶす
+
+    const user = userEvent.setup();
+    render(
+      <SceneProvider defaultScene={<Setup />}>
+        <Scene />
+      </SceneProvider>
+    );
+
+    for (const boxName of ['全員', '全員', '鳳聯藪雨', '燕楽玄鳥']) {
+      await user.click(screen.getByRole('checkbox', { name: boxName }));
+    }
+
+    await user.click(screen.getByText('はじめる'));
+
+    await screen.findByText('どっちがすき？');
+    expect(Compare).toHaveBeenCalledOnce();
+    expect(await save.loadSaveData()).toEqual([undefined, undefined]);
+    screen.getByText('進行状態の自動保存に失敗しました。自動保存機能を無効にしてキャラソートを続行します。');
   });
 });

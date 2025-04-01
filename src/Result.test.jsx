@@ -5,13 +5,18 @@ import userEvent from '@testing-library/user-event';
 
 import { SceneProvider } from './SceneContext.jsx';
 import Scene from './Scene.jsx';
-import Result from './Result.jsx';
 import Setup from './Setup.jsx';
+import Result from './Result.jsx';
+import ErrorPage, { messageClearSaveData } from './ErrorPage.jsx';
 import * as le from './lenen.js';
+import * as save from './save.js';
+import * as sorter from './sorter.js';
 
 vi.mock('./Setup.jsx', { spy: true });
-afterEach(() => {
+vi.mock('./ErrorPage.jsx', { spy: true });
+afterEach(async () => {
   vi.clearAllMocks();
+  await save.clearSaveData();
 });
 
 describe('キャラソートのタイトル', () => {
@@ -131,18 +136,22 @@ describe('リンク', () => {
 });
 
 describe('もう一度ボタン', () => {
-  let confirm;
+  let confirm, clearSaveData, console_error;
+  const charIdSet = new Set([le.hoojiro, le.kuroji, le.hooaka, le.aoji]);
 
   beforeEach(() => {
     confirm = vi.spyOn(window, 'confirm');
+    clearSaveData = vi.spyOn(save, 'clearSaveData');
+    console_error = vi.spyOn(console, 'error');
   });
 
   afterEach(() => {
     confirm.mockRestore();
+    clearSaveData.mockRestore();
+    console_error.mockRestore();
   });
 
-  test('ポップアップをキャンセル', async (
-  ) => {
+  test('ポップアップをキャンセル', async () => {
     confirm.mockImplementation(() => false);
 
     const user = userEvent.setup();
@@ -156,8 +165,7 @@ describe('もう一度ボタン', () => {
     expect(Setup).not.toHaveBeenCalled();
   });
 
-  test('ポップアップを承認', async (
-  ) => {
+  test('ポップアップを承認', async () => {
     confirm.mockImplementation(() => true);
 
     const user = userEvent.setup();
@@ -169,5 +177,76 @@ describe('もう一度ボタン', () => {
 
     await user.click(screen.getByText('もう一度'));
     expect(Setup).toHaveBeenCalled();
+  });
+
+  test('データのクリア処理でエラーになるとエラーページへ遷移', async () => {
+    confirm.mockImplementation(() => true);
+    clearSaveData.mockImplementation(async () => {throw new Error();});
+    console_error.mockImplementation(() => {}); // 握りつぶす
+
+    const user = userEvent.setup();
+    const sorterTitle = 'すき';
+
+    let initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
+    await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
+    while (initialSortHistory.steps[initialSortHistory.currentStep].sortState !== 'end') {
+      initialSortHistory = sorter.reduceSortHistory(initialSortHistory, { type: 'compare', result: 'a' });
+      await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
+    }
+
+    render(
+      <SceneProvider
+        defaultScene={
+          <Result
+            sorterTitle="すき"
+            ranking={initialSortHistory.steps[initialSortHistory.currentStep].ranking}
+            unranked={initialSortHistory.steps[initialSortHistory.currentStep].heaptree.flat().toSorted((a, b) => a - b)}
+          />
+        }
+      >
+        <Scene />
+      </SceneProvider>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'もう一度' }));
+    await screen.findByText(messageClearSaveData);
+    expect(Setup).not.toHaveBeenCalled();
+    expect(ErrorPage).toHaveBeenCalled();
+    await screen.findByText('エラー');
+    screen.getByText(messageClearSaveData);
+  });
+
+  test('セーブデータが削除される', async () => {
+    confirm.mockImplementation(() => true);
+
+    const user = userEvent.setup();
+    const sorterTitle = 'すき';
+
+    let initialSortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);
+    await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
+    while (initialSortHistory.steps[initialSortHistory.currentStep].sortState !== 'end') {
+      initialSortHistory = sorter.reduceSortHistory(initialSortHistory, { type: 'compare', result: 'a' });
+      await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
+    }
+
+    render(
+      <SceneProvider
+        defaultScene={
+          <Result
+            sorterTitle="すき"
+            ranking={initialSortHistory.steps[initialSortHistory.currentStep].ranking}
+            unranked={initialSortHistory.steps[initialSortHistory.currentStep].heaptree.flat().toSorted((a, b) => a - b)}
+          />
+        }
+      >
+        <Scene />
+      </SceneProvider>
+    );
+
+    expect(await save.loadSaveData()).toEqual([sorterTitle, initialSortHistory]);
+
+    await user.click(screen.getByRole('button', { name: 'もう一度' }));
+    expect(Setup).toHaveBeenCalled();
+    expect(await save.loadSaveData()).toEqual([undefined, undefined]);
   });
 });
