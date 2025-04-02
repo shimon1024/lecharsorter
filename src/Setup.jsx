@@ -51,6 +51,49 @@ export default function Setup() {
   const [numRanksHasEnabled, setNumRanksHasEnabled] = useState(false);
   const setScene = useContext(SceneSetContext);
 
+  async function handleStart() {
+    const msgs = [];
+    let numRanksNum = charIdSet.size;
+
+    if (charIdSet.size < 2) {
+      msgs.push('・キャラクターを2人以上選択してください。');
+    }
+
+    if (numRanksHasEnabled) {
+      const nr = Number(numRanks);
+      if (Number.isNaN(nr)) {
+        msgs.push('・ランク数制限には数値を入力してください。');
+      } else {
+        numRanksNum = nr;
+      }
+    }
+
+    if (msgs.length !== 0) {
+      alert(msgs.join('\n'));
+      return;
+    }
+
+    // numRanksをcharIdSet.size以下にしないと、比較画面で正確な進捗率を表示できなくなる。
+    const initialSortHistory = sorter.newSortHistory(charIdSet, Math.min(numRanksNum, charIdSet.size), random.genSeed());
+    let initialAutosaveIsEnabled = true;
+
+    try {
+      await save.clearSaveData();
+      await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
+    } catch (e) {
+      console.error(`Setup: handleStart: autosave error: ${e}`);
+      initialAutosaveIsEnabled = false;
+    }
+
+    setScene(
+      <Compare
+        sorterTitle={sorterTitle}
+        initialSortHistory={initialSortHistory}
+        initialAutosaveIsEnabled={initialAutosaveIsEnabled}
+      />
+    );
+  }
+
   function handleAllChange(checked) {
     const newCharIdSet = checked ?
           new Set(le.charIdsAll) :
@@ -134,50 +177,7 @@ export default function Setup() {
 
       <button
         className="setup-start"
-        onClick={async () => {
-          // TODO 別関数に分離
-
-          const msgs = [];
-          let numRanksNum = charIdSet.size;
-
-          if (charIdSet.size < 2) {
-            msgs.push('・キャラクターを2人以上選択してください。');
-          }
-
-          if (numRanksHasEnabled) {
-            const nr = Number(numRanks);
-            if (Number.isNaN(nr)) {
-              msgs.push('・ランク数制限には数値を入力してください。');
-            } else {
-              numRanksNum = nr;
-            }
-          }
-
-          if (msgs.length !== 0) {
-            alert(msgs.join('\n'));
-            return;
-          }
-
-          // numRanksをcharIdSet.size以下にしないと、比較画面で正確な進捗率を表示できなくなる。
-          const initialSortHistory = sorter.newSortHistory(charIdSet, Math.min(numRanksNum, charIdSet.size), random.genSeed());
-          let initialAutosaveIsEnabled = true;
-
-          try {
-            await save.clearSaveData();
-            await save.saveSaveData(sorterTitle, initialSortHistory, 'compare');
-          } catch (e) {
-            console.error(`Setup: handleStart: autosave error: ${e}`);
-            initialAutosaveIsEnabled = false;
-          }
-
-          setScene(
-            <Compare
-              sorterTitle={sorterTitle}
-              initialSortHistory={initialSortHistory}
-              initialAutosaveIsEnabled={initialAutosaveIsEnabled}
-            />
-          );
-        }}
+        onClick={handleStart}
       >
         はじめる
       </button>
