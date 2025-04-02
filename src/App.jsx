@@ -5,13 +5,37 @@ import Scene from './Scene.jsx';
 import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import Result from './Result.jsx';
+import ErrorPage, { messageOpenViewMode } from './ErrorPage.jsx';
 import * as save from './save.js';
+import * as serialize from './serialize.js';
 
 export default function App() {
   const [initialScene, setInitialScene] = useState(null);
 
   useEffect(() => {
     (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const cmd = params.get('c');
+      if (cmd === 'v') {
+        try {
+          const { sorterTitle, ranking, unranked } = serialize.deserializeResultData(params);
+
+          setInitialScene(
+            <Result
+              sorterTitle={sorterTitle}
+              ranking={ranking}
+              unranked={unranked}
+              mode="view"
+            />
+          );
+        } catch (e) {
+          console.error(`App: view mode error: ${e}`);
+          setInitialScene(<ErrorPage message={messageOpenViewMode} />);
+        }
+
+        return;
+      }
+
       const [sorterTitle, sortHistory] = await save.loadSaveData().catch(() => []);
       if (sorterTitle != null && sortHistory != null &&
           confirm('保存されたセーブデータが見つかりました。開きますか？')) {

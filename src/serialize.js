@@ -1,61 +1,64 @@
-export function serializeRanking(version, ranking) {
-  if (version === 1) {
+import { Uint8ArrayToBase64, Uint8ArrayFromBase64 } from './base64.js';
+
+export function serializeResultData(searchParams, version, resultData) {
+  switch (version) {
+  case '1': {
+    searchParams.set('v', version);
+    const { sorterTitle, ranking, unranked } = resultData;
+
     // 各ランクごとにセミコロン的なデリミタがある。
     // 例: [1, 255, 2, 255, 3, 4, 255, 5, 255]
     //     ->[[1], [2], [3, 4], [5]]
-    let charsBytes = [];
+    let rankingBytes = [];
     for (let i = 0; i < ranking.length; i++) {
       for (let j = 0; j < ranking[i].length; j++) {
-        charsBytes.push(ranking[i][j]);
+        rankingBytes.push(ranking[i][j]);
       }
-      charsBytes.push(255);
+      rankingBytes.push(255);
     }
-    return Uint8Array.from(charsBytes);
-  }
+    searchParams.set('rn', Uint8ArrayToBase64(Uint8Array.from(rankingBytes), { alphabet: 'base64url' }));
 
-  throw new Error(`unknown verion ${version}`);
-}
+    searchParams.set('ur', Uint8ArrayToBase64(Uint8Array.from(unranked), { alphabet: 'base64url' }));
 
-export function serializeUnranked(version, unranked) {
-  if (version === 1) {
-    // 各キャラIDを単純に並べる。
-    return Uint8Array.from(unranked);
-  }
-
-  throw new Error(`unknown verion ${version}`);
-}
-
-export function serializeSorterTitle(version, sorterTitle) {
-  if (version === 1) {
     // 単純にバイト列化。
     // new Uint8Arrayは回避策 https://github.com/vitest-dev/vitest/issues/4043
-    return new Uint8Array((new TextEncoder()).encode(sorterTitle));
-  }
+    const sorterTitleBytes = new Uint8Array((new TextEncoder()).encode(sorterTitle));
+    searchParams.set('st', Uint8ArrayToBase64(Uint8Array.from(sorterTitleBytes), { alphabet: 'base64url' }));
 
-  throw new Error(`unknown verion ${version}`);
+    return;
+  }
+  default: throw new TypeError(`unknown verion ${version}`);
+  }
 }
 
-// TODO 実装
-// TODO タイトル
-// TODO テスト
-/*
-export function deserializeResultData(version, charsBytes) {
-  if (version === 1) {
-    const chars = [];
-    let sameRankChars = [];
-    for (let i = 0; i < charsBytes.length; i++) {
-      if (charsBytes[i] === 255) {
-        chars.push(sameRankChars);
-        sameRankChars = [];
+export function deserializeResultData(searchParams) {
+  const version = searchParams.get('v');
+
+  switch (version) {
+  case '1': {
+    const rankingBytes = Uint8ArrayFromBase64(searchParams.get('rn'), { alphabet: 'base64url' });
+    const ranking = [];
+    let sameRank = [];
+    for (const num of rankingBytes) {
+      if (num === 255) {
+        ranking.push(sameRank);
+        sameRank = [];
       } else {
-        sameRankChars.push(charsBytes[i]);
+        sameRank.push(num);
       }
     }
+    if (sameRank.length !== 0) {
+      throw new SyntaxError('invalid ranking format');
+    }
 
-    return chars;
-    //return { sorterTitle, chars };
+    const unranked = Array.from(Uint8ArrayFromBase64(searchParams.get('ur'), { alphabet: 'base64url' }));
+
+    // new Uint8Arrayは回避策 https://github.com/vitest-dev/vitest/issues/4043
+    const sorterTitleBytes = Uint8ArrayFromBase64(searchParams.get('st'), { alphabet: 'base64url' });
+    const sorterTitle = (new TextDecoder('utf-8', { fatal: true })).decode(new Uint8Array(sorterTitleBytes));
+
+    return { sorterTitle, ranking, unranked };
   }
-
-  throw new Error(`unknown verion ${version}`);
+  default: throw new TypeError(`unknown verion ${version}`);
+  }
 }
-*/
