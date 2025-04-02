@@ -92,6 +92,12 @@
   background-color: color-mix(in hsl shorter hue, var(--mycolor-green-tea) 90%, darkgreen);
 }
 
+.compare-undo:disabled,
+.compare-redo:disabled {
+  color: gray;
+  background-color: lightgray;
+}
+
 .compare-info {
   margin: auto;
 }

@@ -113,12 +113,14 @@ export default function Compare({ sorterTitle, initialSortHistory, initialAutosa
       <hr className="compare-hr-main-sub" />
       <button
         className="compare-undo"
+        disabled={sortHistory.currentStep === 0}
         onClick={async () => handleClick({ type: 'undo' })}
       >
         ↶
       </button>
       <button
         className="compare-redo"
+        disabled={sortHistory.currentStep === sortHistory.steps.length - 1}
         onClick={async () => handleClick({ type: 'redo' })}
       >
         ↷
