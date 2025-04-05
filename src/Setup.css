@@ -9,6 +9,10 @@
   list-style-type: none;
 }
 
+.workgroup-summary {
+  width: max-content;
+}
+
 .workgroup-char {
   display: inline-flex;
   place-items: start;

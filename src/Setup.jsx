@@ -12,7 +12,7 @@ function WorkGroup({ onWorkChange, onCharChange, charIdSet, workId }) {
     <ul className="workgroup-tree">
       <li>
         <details>
-          <summary>
+          <summary className="workgroup-summary">
             <label>
               <input
                 type="checkbox"
