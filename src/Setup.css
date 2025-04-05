@@ -42,8 +42,8 @@
 }
 
 .setup-title {
-  font-size: clamp(1rem, 10vw, var(--h1-font-size-default));
-  margin: 0.375em auto 0.75em;
+  font-size: clamp(var(--h3-font-size-default), 11vw, var(--h2-font-size-default));
+  margin: 0.375em auto 0.5em;
 }
 
 .setup-chars-container {

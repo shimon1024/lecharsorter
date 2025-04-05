@@ -17,13 +17,14 @@
 }
 
 .result-title {
-  font-size: clamp(1rem, 10vw, var(--h2-font-size-default));
-  margin: 0.375em auto 0.75em;
+  font-size: clamp(var(--h3-font-size-default), 11vw, var(--h2-font-size-default));
+  margin: 0.375em auto 0.25em;
 }
 
 .result-subtitle {
-  font-size: clamp(1rem, 10vw, var(--h2-font-size-default));
-  margin: 0;
+  width: min(30rem, 100%);
+  font-size: clamp(1.25rem, 7.5vw, var(--h3-font-size-default));
+  margin: 0 0 0.5em;
 }
 
 .result-chars-container {

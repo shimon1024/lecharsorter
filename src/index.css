@@ -5,8 +5,9 @@
 
   --xkcd-dark-blue-gray: #1f3b4d;
   --mycolor-green-tea: #f0ffe0;
-  --h1-font-size-default: 3.2rem;
-  --h2-font-size-default: 2.5rem;
+  --h1-font-size-default: 3.125rem;
+  --h2-font-size-default: 2.625rem;
+  --h3-font-size-default: 2.175rem;
 
   color: var(--xkcd-dark-blue-gray);
   background-color: white;
