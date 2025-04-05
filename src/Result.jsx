@@ -54,10 +54,16 @@ ${twRanking}…`);
   }
 
   async function handleDownloadImage() {
-    const rankingCanvas = await html2canvas(document.getElementById('ranking'));
-    const downloadTempLink = document.createElement('a');
-    downloadTempLink.href =  rankingCanvas.toDataURL();
-    downloadTempLink.download = 'ranking.png';
+    const rankingCanvas = await html2canvas(document.getElementById('result-main'), {
+      onclone(documentClone) {
+        documentClone.getElementById('result-main').style.width = '36rem'; // .result-main.widthの最大値と同値
+      }
+    });
+
+    const downloadTempLink = Object.assign(document.createElement('a'), {
+      href: rankingCanvas.toDataURL(),
+      download: 'ranking.png',
+    });
     downloadTempLink.style.display = 'none';
 
     document.body.appendChild(downloadTempLink);
@@ -70,24 +76,28 @@ ${twRanking}…`);
 
   return (
     <div className="result">
-      <h1 className="result-title">連縁キャラソート</h1>
-      <h2 className="result-subtitle">{sorterTitle}ランキング</h2>
-      <div id="ranking" className="result-chars-container" data-testid="result-chars-container">
-        {
-          rankingList.map((r, i) =>
-            <Fragment key={i}>
-              <span className="result-chars-rank">{r.rank}位</span>
-              <span>{le.chars[r.charId].name}</span>
-            </Fragment>
-          ).concat(unranked.map((c, i) =>
-            <Fragment key={rankingList.length + i}>
-              <span className="result-chars-rank">ランク外</span>
-              <span>{le.chars[c].name}</span>
-            </Fragment>
-          ))
-        }
+      <div className="result-main" id="result-main">
+        <h1 className="result-title">連縁キャラソート</h1>
+        <h2 className="result-subtitle">{sorterTitle}ランキング</h2>
+        <div className="result-chars-container" data-testid="result-chars-container">
+          {
+            rankingList.map((r, i) =>
+              <Fragment key={i}>
+                <span className="result-chars-rank">{r.rank}位</span>
+                <span>{le.chars[r.charId].name}</span>
+                <span></span>
+              </Fragment>
+            ).concat(unranked.map((c, i) =>
+              <Fragment key={rankingList.length + i}>
+                <span className="result-chars-rank">ランク外</span>
+                <span>{le.chars[c].name}</span>
+                <span></span>
+              </Fragment>
+            ))
+          }
+        </div>
       </div>
-      <div className="result-info" data-testid="result-info">
+      <div data-testid="result-info">
         {
           (() => {
             if (nCompares != null) {

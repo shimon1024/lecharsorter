@@ -1,7 +1,7 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: normal;
 
   --xkcd-dark-blue-gray: #1f3b4d;
   --mycolor-green-tea: #f0ffe0;
@@ -30,15 +30,16 @@ body {
 h1 {
   font-size: var(--h1-font-size-default);
   line-height: 1.1;
+  font-weight: normal;
 }
 
 h2 {
   font-size: var(--h2-font-size-default);
   line-height: 1;
+  font-weight: normal;
 }
 
 a {
-  font-weight: 500;
   color: limegreen;
   text-decoration: inherit;
 }
@@ -54,7 +55,6 @@ button {
   border-radius: 0.5em;
   border-style: none;
   padding: 0.6em 1.2em;
-  font-weight: 500;
   background-color: whitesmoke;
   cursor: pointer;
 }
