@@ -9,6 +9,14 @@
   list-style-type: none;
 }
 
+.workgroup-details {
+ /*
+  * 目的は、全体のチェックボックスと作品のチェックボックスの間の幅を、
+  * 作品のチェックボックスとキャラのチェックボックスの間の幅と合わせるため。
+  */
+  margin-left: 7px;
+}
+
 .workgroup-summary {
   width: max-content;
 }
@@ -42,12 +50,16 @@
   grid-column: 1 / -1;
   font-size: 1rem;
   margin: 1em auto;
-  padding: 0.5em 1em;
+  padding: 0.5em 0.75em;
   background-color: whitesmoke;
   border-radius: 0.5em;
 
   box-sizing: border-box;
   width: 100%;
+}
+
+.setup-check-all {
+  margin-left: 0;
 }
 
 .setup-chars-workgroup-container {

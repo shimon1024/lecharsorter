@@ -11,7 +11,7 @@ function WorkGroup({ onWorkChange, onCharChange, charIdSet, workId }) {
   return (
     <ul className="workgroup-tree">
       <li>
-        <details>
+        <details className="workgroup-details">
           <summary className="workgroup-summary">
             <label>
               <input
@@ -123,6 +123,7 @@ export default function Setup() {
         <label>
           <input
             type="checkbox"
+            className="setup-check-all"
             checked={charIdSet.isSupersetOf(new Set(le.charIdsAll))}
             onChange={e => handleAllChange(e.target.checked)}
           />
