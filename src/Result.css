@@ -57,7 +57,6 @@
 
 .result-download-image {
   all: unset;
-  font-weight: 500;
   color: limegreen;
 }
 .result-download-image:hover,

@@ -88,19 +88,6 @@ input[type="text"] {
   padding: 0.3em;
 }
 
-select {
-  /* reset */
-  font-family: inherit;
-  font-weight: inherit;
-  color: inherit;
-  text-rendering: inherit;
-  font-size: 1rem;
-
-  background-color: whitesmoke;
-  border-style: none;
-  padding: 0.3em 0 0.3em 0.3em;
-}
-
 footer {
   font-size: 0.75rem;
 }

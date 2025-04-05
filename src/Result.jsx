@@ -56,7 +56,9 @@ ${twRanking}…`);
   async function handleDownloadImage() {
     const rankingCanvas = await html2canvas(document.getElementById('result-main'), {
       onclone(documentClone) {
-        documentClone.getElementById('result-main').style.width = '36rem'; // .result-main.widthの最大値と同値
+        // .result-main.widthの最大値と同値に固定。
+        // レスポンシブデザインだと、環境によって見え方が変わるが、画像にするときはレイアウトを統一する。
+        documentClone.getElementById('result-main').style.width = '36rem';
       }
     });
 
