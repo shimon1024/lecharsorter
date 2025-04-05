@@ -148,7 +148,6 @@ export default function Setup() {
       <span className="setup-numranks-container">
         <input
           type="checkbox"
-          className="setup-numranks-checkbox"
           checked={numRanksHasEnabled}
           onChange={e => setNumRanksHasEnabled(e.target.checked)}
         />
@@ -161,7 +160,7 @@ export default function Setup() {
           onChange={e => setNumRanks(e.target.value)}
           value={numRanks}
         />
-        までに制限
+        に制限
       </span>
 
       <span className="setup-sorter-title-container">
@@ -170,6 +169,7 @@ export default function Setup() {
           type="text"
           className="setup-sorter-title"
           maxLength="70"
+          size="10"
           onChange={e => setSorterTitle(e.target.value)}
           value={sorterTitle}
         />

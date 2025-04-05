@@ -70,17 +70,10 @@
 .setup-numranks-container {
   font-size: 1rem;
   margin: 0.25em 0 1em;
-
-  display: inline-flex;
-  align-items: baseline;
-}
-
-.setup-numranks-checkbox {
-  align-self: center;
 }
 
 .setup-numranks {
-  width: 3rem;
+  width: 2rem;
 }
 
 .setup-sorter-title-container {
@@ -88,6 +81,7 @@
   margin: 0.25em 0 1em;
 
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: baseline;
 }
 
