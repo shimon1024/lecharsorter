@@ -153,9 +153,10 @@ export default function Setup() {
         />
         ランクインするランクの数を
         <input
-          type="text"
+          type="number"
           className="setup-numranks"
-          maxLength="4"
+          min="1"
+          max="999"
           disabled={!numRanksHasEnabled}
           onChange={e => setNumRanks(e.target.value)}
           value={numRanks}

@@ -76,7 +76,8 @@ input[type="checkbox"] {
   vertical-align: -0.25em;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
   /* reset */
   font-size: 1rem;
   font-family: inherit;
@@ -87,6 +88,12 @@ input[type="text"] {
   background-color: whitesmoke;
   border-style: none;
   padding: 0.3em;
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled {
+  color: gray;
+  background-color: lightgray;
 }
 
 footer {
