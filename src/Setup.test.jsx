@@ -4,7 +4,7 @@ import { within } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 import { SceneProvider } from './SceneContext.jsx';
-import Scene from './Scene.jsx';
+import Scene from './Scene.js';
 import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import * as le from './lenen.js';

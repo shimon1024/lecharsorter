@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { SceneProvider } from './SceneContext.jsx';
-import Scene from './Scene.jsx';
+import Scene from './Scene.js';
 import Setup from './Setup.jsx';
 import Compare from './Compare.jsx';
 import Result from './Result.jsx';
