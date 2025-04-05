@@ -26,12 +26,12 @@ export default function Result({ sorterTitle, ranking, unranked, nCompares, mode
     rank += ranking[i].length;
   }
 
-  const viewerURL = new URL(window.location.pathname, window.location.origin); // javascriptスキームインジェクションに注意
+  const viewerURL = new URL(window.location.pathname, window.location.origin);
   viewerURL.searchParams.set('c', 'v');
   const paramMap = serialize.serializeResultData(viewerURL.searchParams, '1', { sorterTitle, ranking, unranked });
 
   const twRanking = rankingList.slice(0, 3).map(r => `${r.rank}位 ${le.chars[r.charId].name}\n`).reduce((a, s) => a + s, '');
-  const twPostURL = new URL(twPostURLBase); // javascriptスキームインジェクションに注意
+  const twPostURL = new URL(twPostURLBase);
   twPostURL.searchParams.set('url', viewerURL.toString());
   twPostURL.searchParams.set('text', `\
 連縁キャラソート${sorterTitle}ランキング
