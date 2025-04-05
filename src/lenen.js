@@ -53,6 +53,7 @@ chars.push(newCharacter('ベニー'));
 chars.push(newCharacter('レイ'));
 chars.push(newCharacter('ゼロ'));
 chars.push(newCharacter('リン'));
+chars.push(newCharacter('輝美'));
 
 countChars = 1;
 export const yabusame = countChars++;
@@ -103,6 +104,7 @@ export const benny = countChars++;
 export const rei = countChars++;
 export const zelo = countChars++;
 export const lin = countChars++;
+export const terumi = countChars++;
 
 function newWork(name, chars) {
   return { name, chars };
@@ -175,6 +177,7 @@ works.push(newWork('設定', [
   hamee,
   ardey,
   benny,
+  terumi,
 ]));
 
 countWorks = 1;
@@ -206,6 +209,6 @@ export const workIdsDefault = [
   ee,
   ems,
   rmi,
-  bpohc
+  bpohc,
 ];
 export const charIdsDefault = workIdsDefault.flatMap(w => works[w].chars);
