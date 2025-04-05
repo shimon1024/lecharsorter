@@ -61,8 +61,8 @@ export default function Setup() {
 
     if (numRanksHasEnabled) {
       const nr = Number(numRanks);
-      if (Number.isNaN(nr)) {
-        msgs.push('・ランク数制限には数値を入力してください。');
+      if (Number.isNaN(nr) || nr < 1) {
+        msgs.push('・ランク数制限には1以上の数値を入力してください。');
       } else {
         numRanksNum = nr;
       }

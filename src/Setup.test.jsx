@@ -112,7 +112,7 @@ describe('ランク数の指定', () => {
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
         initialAutosaveIsEnabled: true,
       },
-      expect.anything()
+      undefined
     );
   });
 
@@ -140,7 +140,7 @@ describe('ランク数の指定', () => {
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
         initialAutosaveIsEnabled: true,
       },
-      expect.anything()
+      undefined
     );
   });
 
@@ -153,9 +153,9 @@ describe('ランク数の指定', () => {
     );
 
     await user.click(screen.getByRole('checkbox', { name: '全員' }));
-    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
+    const nranks = screen.getByText('ランクインするランクの数をに制限');
     await user.click(within(nranks).getByRole('checkbox'));
-    await user.type(within(nranks).getByRole('textbox'), '3');
+    await user.type(within(nranks).getByRole('spinbutton'), '3');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('どっちがすき？');
@@ -169,7 +169,7 @@ describe('ランク数の指定', () => {
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
         initialAutosaveIsEnabled: true,
       },
-      expect.anything()
+      undefined
     );
   });
 
@@ -185,9 +185,9 @@ describe('ランク数の指定', () => {
       await user.click(screen.getByRole('checkbox', { name: boxName }));
     }
 
-    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
+    const nranks = screen.getByText('ランクインするランクの数をに制限');
     await user.click(within(nranks).getByRole('checkbox'));
-    await user.type(within(nranks).getByRole('textbox'), '3');
+    await user.type(within(nranks).getByRole('spinbutton'), '3');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('どっちがすき？');
@@ -201,7 +201,7 @@ describe('ランク数の指定', () => {
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
         initialAutosaveIsEnabled: true,
       },
-      expect.anything()
+      undefined
     );
   });
 });
@@ -314,7 +314,7 @@ describe('キャラ/グループの選択', () => {
         initialSortHistory: sorter.newSortHistory.mock.results[0].value,
         initialAutosaveIsEnabled: true,
       },
-      expect.anything()
+      undefined
     );
   });
 });
@@ -375,13 +375,13 @@ describe('キャラソート開始', () => {
       </SceneProvider>
     );
 
-    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
+    const nranks = screen.getByText('ランクインするランクの数をに制限');
     await user.click(within(nranks).getByRole('checkbox'));
-    await user.type(within(nranks).getByRole('textbox'), '3a');
+    await user.type(within(nranks).getByRole('spinbutton'), '0');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('はじめる');
-    expect(alert).toHaveBeenCalledWith('・ランク数制限には数値を入力してください。');
+    expect(alert).toHaveBeenCalledWith('・ランク数制限には1以上の数値を入力してください。');
     expect(Compare).not.toHaveBeenCalled();
   });
 
@@ -397,13 +397,13 @@ describe('キャラソート開始', () => {
       await user.click(screen.getByRole('checkbox', { name: boxName }));
     }
 
-    const nranks = screen.getByText('ランクインするランクの数をまでに制限');
+    const nranks = screen.getByText('ランクインするランクの数をに制限');
     await user.click(within(nranks).getByRole('checkbox'));
-    await user.type(within(nranks).getByRole('textbox'), '3a');
+    await user.type(within(nranks).getByRole('spinbutton'), '0');
     await user.click(screen.getByText('はじめる'));
 
     await screen.findByText('はじめる');
-    expect(alert).toHaveBeenCalledWith('・キャラクターを2人以上選択してください。\n・ランク数制限には数値を入力してください。');
+    expect(alert).toHaveBeenCalledWith('・キャラクターを2人以上選択してください。\n・ランク数制限には1以上の数値を入力してください。');
     expect(Compare).not.toHaveBeenCalled();
   });
 
