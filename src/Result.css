@@ -67,6 +67,10 @@
   color: color-mix(in srgb, limegreen 90%, white);
 }
 
+.result-result-tw {
+  margin-top: 0.25rem;
+}
+
 .result-result-link {
   margin-top: 0.25rem;
 }

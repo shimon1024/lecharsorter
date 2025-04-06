@@ -110,7 +110,7 @@ ${twRanking}…`);
       </div>
       <hr className="result-hr-main-sub" />
       <button className="result-download-image" onClick={handleDownloadImage}>画像をダウンロード</button>
-      {mode !== 'view' && <a href={twPostURL.toString()} target="_blank">Xで共有</a>}
+      {mode !== 'view' && <a className="result-result-tw" href={twPostURL.toString()} target="_blank">Xで共有</a>}
       {mode !== 'view' && <a className="result-result-link" href={viewerURL.toString()} target="_blank">結果へのリンク</a>}
       {mode !== 'view' && <button className="result-retry" onClick={handleRetryClick}>もう一度</button>}
     </div>
