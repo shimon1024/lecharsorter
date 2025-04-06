@@ -95,8 +95,8 @@
 
 .compare-undo:disabled,
 .compare-redo:disabled {
-  color: gray;
-  background-color: lightgray;
+  color: color-mix(in srgb, var(--xkcd-dark-blue-gray) 30%, white);
+  background-color: color-mix(in srgb, whitesmoke 40%, white);
 }
 
 .compare-info {
