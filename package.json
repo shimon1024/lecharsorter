@@ -1,6 +1,7 @@
 {
   "name": "lecharsorter",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE.txt",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
