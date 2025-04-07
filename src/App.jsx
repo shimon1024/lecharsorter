@@ -18,73 +18,73 @@ export default function App() {
     let inited = false;
 
     return () => {
-    if (inited) {
-      return;
-    }
-    inited = true;
-
-    async function init() {
-      const params = new URLSearchParams(window.location.search);
-      const cmd = params.get('c');
-      if (cmd === 'v') {
-        try {
-          const { sorterTitle, ranking, unranked } = serialize.deserializeResultData(params);
-
-          setInitialScene(
-            <Result
-              sorterTitle={sorterTitle}
-              ranking={ranking}
-              unranked={unranked}
-              mode="view"
-            />
-          );
-        } catch (e) {
-          console.error(`App: view mode error: ${e}`);
-          setInitialScene(<ErrorPage message={messageOpenViewMode} />);
-        }
-
+      if (inited) {
         return;
       }
+      inited = true;
 
-      const [sorterTitle, sortHistory] = await save.loadSaveData().catch((e) => {
-        console.error(`App: load save data error: ${e}`);
-        return [];
-      });
+      async function init() {
+        const params = new URLSearchParams(window.location.search);
+        const cmd = params.get('c');
+        if (cmd === 'v') {
+          try {
+            const { sorterTitle, ranking, unranked } = serialize.deserializeResultData(params);
 
-      if (sorterTitle != null && sortHistory != null &&
-          confirm('保存されたセーブデータが見つかりました。開きますか？')) {
-        if (sortHistory.steps[sortHistory.currentStep].sortState !== 'end') {
-          setInitialScene(
-            <Compare
-              sorterTitle={sorterTitle}
-              initialSortHistory={sortHistory}
-              initialAutosaveIsEnabled={true}
-            />
-          );
-        } else {
-          const step = sortHistory.steps[sortHistory.currentStep];
-          setInitialScene(
-            <Result
-              sorterTitle={sorterTitle}
-              ranking={step.ranking}
-              unranked={step.heaptree.flat().toSorted((a, b) => a - b)}
-              nCompares={sortHistory.currentStep}
-            />
-          );
+            setInitialScene(
+              <Result
+                sorterTitle={sorterTitle}
+                ranking={ranking}
+                unranked={unranked}
+                mode="view"
+              />
+            );
+          } catch (e) {
+            console.error(`App: view mode error: ${e}`);
+            setInitialScene(<ErrorPage message={messageOpenViewMode} />);
+          }
+
+          return;
         }
-      } else {
-        setInitialScene(<Setup />);
-      }
-    }
 
-    // ブラウザが投機ルールAPIをサポートしている場合、事前レンダリング中はconfirmの呼び出しが制限されるため、
-    // 初期化処理を事前レンダリング完了後に延期する。
-    // https://developer.mozilla.org/ja/docs/Web/API/Speculation_Rules_API
-    if (document.prerendering) {
-      document.addEventListener('prerenderingchange', init, { once: true });
-    } else {
-      init();
-    }
+        const [sorterTitle, sortHistory] = await save.loadSaveData().catch((e) => {
+          console.error(`App: load save data error: ${e}`);
+          return [];
+        });
+
+        if (sorterTitle != null && sortHistory != null &&
+            confirm('保存されたセーブデータが見つかりました。開きますか？')) {
+          if (sortHistory.steps[sortHistory.currentStep].sortState !== 'end') {
+            setInitialScene(
+              <Compare
+                sorterTitle={sorterTitle}
+                initialSortHistory={sortHistory}
+                initialAutosaveIsEnabled={true}
+              />
+            );
+          } else {
+            const step = sortHistory.steps[sortHistory.currentStep];
+            setInitialScene(
+              <Result
+                sorterTitle={sorterTitle}
+                ranking={step.ranking}
+                unranked={step.heaptree.flat().toSorted((a, b) => a - b)}
+                nCompares={sortHistory.currentStep}
+              />
+            );
+          }
+        } else {
+          setInitialScene(<Setup />);
+        }
+      }
+
+      // ブラウザが投機ルールAPIをサポートしている場合、事前レンダリング中はconfirmの呼び出しが制限されるため、
+      // 初期化処理を事前レンダリング完了後に延期する。
+      // https://developer.mozilla.org/ja/docs/Web/API/Speculation_Rules_API
+      if (document.prerendering) {
+        document.addEventListener('prerenderingchange', init, { once: true });
+      } else {
+        init();
+      }
     };
   })(), []);
 
