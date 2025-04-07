@@ -9,7 +9,7 @@ import * as b64 from './base64.js';
 import * as serialize from './serialize.js';
 import * as save from './save.js';
 
-const twPostURLBase = 'https://x.com/intent/post';
+const twPostURLBase = 'https://twitter.com/intent/tweet';
 
 export default function Result({ sorterTitle, ranking, unranked, nCompares, mode }) {
   const setScene = useContext(SceneSetContext);
