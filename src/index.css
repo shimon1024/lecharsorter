@@ -52,6 +52,9 @@ button {
   /* reset */
   font-size: 1rem;
   font-family: inherit;
+  foo-font-weight: inherit;
+  color: inherit;
+  foo-text-rendering: inherit;
 
   border-radius: 0.5em;
   border-style: none;
