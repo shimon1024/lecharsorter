@@ -25,16 +25,18 @@ afterEach(async () => {
 });
 
 describe('セーブデータの読み込み', () => {
-  let confirm, loadSaveData;
+  let confirm, loadSaveData, console_error;
 
   beforeEach(() => {
     confirm = vi.spyOn(window, 'confirm');
     loadSaveData = vi.spyOn(save, 'loadSaveData');
+    console_error = vi.spyOn(console, 'error');
   });
 
   afterEach(() => {
     confirm.mockRestore();
     loadSaveData.mockRestore();
+    console_error.mockRestore();
   });
 
   test('セーブデータ無し', async () => {
@@ -126,6 +128,7 @@ describe('セーブデータの読み込み', () => {
   test('セーブデータあり(読み込みで例外)', async () => {
     confirm.mockImplementation(() => {throw new Error();});
     loadSaveData.mockImplementation(async () => {throw new Error();});
+    console_error.mockImplementation(() => {}); // 握りつぶす
 
     const sorterTitle = 'すき';
     let sortHistory = sorter.newSortHistory(charIdSet, charIdSet.size, 0);

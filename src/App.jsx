@@ -12,8 +12,18 @@ import * as serialize from './serialize.js';
 export default function App() {
   const [initialScene, setInitialScene] = useState(null);
 
-  useEffect(() => {
-    (async () => {
+  useEffect((() => {
+    // トップレベルで初期化するとwindow.*を差し替えたモックテストができなくなるため、useEffectで初期化処理を行う。
+
+    let inited = false;
+
+    return () => {
+    if (inited) {
+      return;
+    }
+    inited = true;
+
+    async function init() {
       const params = new URLSearchParams(window.location.search);
       const cmd = params.get('c');
       if (cmd === 'v') {
@@ -36,7 +46,11 @@ export default function App() {
         return;
       }
 
-      const [sorterTitle, sortHistory] = await save.loadSaveData().catch(() => []);
+      const [sorterTitle, sortHistory] = await save.loadSaveData().catch((e) => {
+        console.error(`App: load save data error: ${e}`);
+        return [];
+      });
+
       if (sorterTitle != null && sortHistory != null &&
           confirm('保存されたセーブデータが見つかりました。開きますか？')) {
         if (sortHistory.steps[sortHistory.currentStep].sortState !== 'end') {
@@ -61,10 +75,20 @@ export default function App() {
       } else {
         setInitialScene(<Setup />);
       }
-    })();
-  }, []);
+    }
 
-  return initialScene === null ? <></> : (
+    // ブラウザが投機ルールAPIをサポートしている場合、事前レンダリング中はconfirmの呼び出しが制限されるため、
+    // 初期化処理を事前レンダリング完了後に延期する。
+    // https://developer.mozilla.org/ja/docs/Web/API/Speculation_Rules_API
+    if (document.prerendering) {
+      document.addEventListener('prerenderingchange', init, { once: true });
+    } else {
+      init();
+    }
+    };
+  })(), []);
+
+  return initialScene === null ? (<></>) : (
     <>
       <SceneProvider defaultScene={initialScene}>
         <Scene />
