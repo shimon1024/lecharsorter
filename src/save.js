@@ -14,7 +14,7 @@ import { openDB } from 'idb';
 //   - アプリ開始時にクリアはしない。クラッシュループになりうるため。最初のロードに失敗した場合は、失敗を握りつぶした後、
 //     比較開始までセーブデータにアクセスしない。
 
-const dbName = window.location.pathname + '#idbSortHistory';
+const dbName = window.location.pathname + '#idbSave';
 const dbPromise = openDB(dbName, 1, {
   upgrade(db, oldVersion) {
     switch (oldVersion) {

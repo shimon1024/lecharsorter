@@ -7,7 +7,7 @@ import * as sorter from './sorter.js';
 
 // IndexedDBに永続化できているかを確かめるテスト。
 
-const dbName = window.location.pathname + '#idbSortHistory';
+const dbName = window.location.pathname + '#idbSave';
 const dbPromise = openDB(dbName, 1);
 
 afterEach(async () => {
