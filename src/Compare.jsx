@@ -116,14 +116,14 @@ export default function Compare({ sorterTitle, initialSortHistory, initialAutosa
         disabled={sortHistory.currentStep === 0}
         onClick={async () => handleClick({ type: 'undo' })}
       >
-        ↶
+        ←
       </button>
       <button
         className="compare-redo"
         disabled={sortHistory.currentStep === sortHistory.steps.length - 1}
         onClick={async () => handleClick({ type: 'redo' })}
       >
-        ↷
+        →
       </button>
       <div className="compare-info">{`(${sortHistory.currentStep + 1}組目、${progressPercent}%完了)`}</div>
       <div className="compare-autosave">{!autosaveIsEnabled && '進行状態の自動保存に失敗しました。自動保存機能を無効にしてキャラソートを続行します。'}</div>

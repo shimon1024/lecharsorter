@@ -137,7 +137,7 @@ describe('操作のやり直し', () => {
     await user.click(screen.getByRole('button', { name: '鵐頬赤' }));
 
     await screen.findByText('(2組目、20%完了)');
-    await user.click(screen.getByRole('button', { name: '↶' }));
+    await user.click(screen.getByRole('button', { name: '←' }));
 
     // assertion
     await screen.findByText('(1組目、0%完了)');
@@ -167,10 +167,10 @@ describe('操作のやり直し', () => {
     await user.click(screen.getByRole('button', { name: '鵐頬赤' }));
 
     await screen.findByText('(2組目、20%完了)');
-    await user.click(screen.getByRole('button', { name: '↶' })); // undo
+    await user.click(screen.getByRole('button', { name: '←' })); // undo
 
     await screen.findByText('(1組目、0%完了)');
-    await user.click(screen.getByRole('button', { name: '↷' })); // redo
+    await user.click(screen.getByRole('button', { name: '→' })); // redo
 
     // assertion
     await screen.findByText('(2組目、20%完了)');
@@ -197,16 +197,16 @@ describe('自動保存', () => {
      ['鵐頬赤', '鵐頬告鳥'],
      [{ type: 'compare', result: 'a' }, { type: 'compare', result: 'b' }]],
     ['1つだけ戻る',
-     ['鵐頬赤', '鵐頬告鳥', '↶'],
+     ['鵐頬赤', '鵐頬告鳥', '←'],
      [{ type: 'compare', result: 'a' }, { type: 'compare', result: 'b' }, { type: 'undo' }]],
     ['2つ戻る',
-     ['鵐頬赤', '鵐頬告鳥', '↶', '↶'],
+     ['鵐頬赤', '鵐頬告鳥', '←', '←'],
      [{ type: 'compare', result: 'a' }, { type: 'compare', result: 'b' }, { type: 'undo' }, { type: 'undo' }]],
     ['1つだけ戻り1つだけ進む',
-     ['鵐頬赤', '鵐頬告鳥', '↶', '↷'],
+     ['鵐頬赤', '鵐頬告鳥', '←', '→'],
      [{ type: 'compare', result: 'a' }, { type: 'compare', result: 'b' }, { type: 'undo' }, { type: 'redo' }]],
     ['2つ戻り1つだけ進む',
-     ['鵐頬赤', '鵐頬告鳥', '↶', '↶', '↷'],
+     ['鵐頬赤', '鵐頬告鳥', '←', '←', '→'],
      [{ type: 'compare', result: 'a' }, { type: 'compare', result: 'b' }, { type: 'undo' }, { type: 'undo' }, { type: 'redo' }]],
   ])('%s', async (
     _testName,
