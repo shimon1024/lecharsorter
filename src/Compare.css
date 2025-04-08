@@ -19,7 +19,13 @@
 .compare-main {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(23rem, 1fr));
+  grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: calc(46rem / 0.95)) {
+  .compare-main {
+    grid-template-columns: 1fr;
+  }
 }
 
 .compare-char1,
